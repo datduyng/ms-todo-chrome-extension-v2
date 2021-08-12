@@ -1,5 +1,7 @@
 const key = 'ms-auth-storage';
-let localStorage = chrome.extension.getBackgroundPage().localStorage;
+
+let localStorage =
+  chrome.extension.getBackgroundPage()?.localStorage || window.localStorage;
 
 type AuthStore = {
   version: string;
