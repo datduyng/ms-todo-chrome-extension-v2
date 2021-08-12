@@ -24,7 +24,13 @@ NOTE: `*@microsoft.com` account won't work
 
 ![](./assets/microsoft-auth-get-accesstok-result.png)
 
+Test to make sure that your access token is correctly retrieved
+
+![](./assets/microsoft-auth-retrieve-tasks-test.png)
+
 
 
 # Refresh token in postman
 ![](./assets/microsoft-auth-refreshtok.png)
+
+
