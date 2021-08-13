@@ -1,7 +1,21 @@
 {
-  "presets": ["@babel/preset-env", "@babel/preset-react", "react-app"],
+  "presets": [
+    "@babel/preset-env",
+    "@babel/preset-react",
+    "react-app",
+    "@babel/typescript"
+  ],
   "plugins": [
     // "@babel/plugin-proposal-class-properties",
-    "react-hot-loader/babel"
+    "react-hot-loader/babel",
+    [
+      "module-resolver",
+      {
+        "root": ["./src"],
+        "alias": {
+          "global-stores": "./global-stores"
+        }
+      }
+    ]
   ]
 }

@@ -15,9 +15,9 @@
     "noEmit": false,
     "jsx": "react",
     "types": ["chrome", "node"],
-    "baseUrl": "src",
+    "baseUrl": "./src",
     "paths": {
-      // "@global-stores/*": ["global-stores/*"]
+      // "global-stores/*": ["./global-stores/*"]
     },
     "typeRoots": ["node_modules/@types", "src/types"]
   },

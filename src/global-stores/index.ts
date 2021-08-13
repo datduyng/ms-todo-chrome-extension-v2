@@ -1,6 +1,12 @@
-import { unstable_batchedUpdates } from 'react-dom';
 import createStore, { SetState, GetState } from 'zustand';
 import { devtools, persist, StateStorage } from 'zustand/middleware';
+import RouteStore, { RouteStoreType } from './route-store';
+
+if (!(window as any).SLANTED_LAB_DEBUG) {
+  (window as any).SLANTED_LAB_DEBUG = {
+    routeHistory: [],
+  };
+}
 
 type BaseStore = {
   version: string;
@@ -26,7 +32,7 @@ type TestStore = {
   addTodo: () => void;
 };
 
-type GlobalStore = BaseStore & TestStore;
+type GlobalStoreType = BaseStore & TestStore & RouteStoreType;
 
 const testStore = (set: SetState<TestStore>, get: GetState<TestStore>) => ({
   todos: ['todo 1 ', 'todo 2'],
@@ -38,11 +44,11 @@ const testStore = (set: SetState<TestStore>, get: GetState<TestStore>) => ({
   },
 });
 
-const states = combineStateCreators(baseStore, testStore);
+const states = combineStateCreators(baseStore, testStore, RouteStore);
 
 const backgroundWindow = chrome.extension.getBackgroundPage();
 
-let store = createStore<GlobalStore>(
+let store = createStore<GlobalStoreType>(
   devtools<any>(
     persist(states, {
       name: 'slanted-lab-ms-todo',

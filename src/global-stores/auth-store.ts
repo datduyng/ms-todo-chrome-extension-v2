@@ -100,6 +100,7 @@ export const init = async () => {
   }
   return localStorage[MS_AUTH_KEY];
 };
+
 init();
 
 export const get = () => {
