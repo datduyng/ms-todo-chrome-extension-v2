@@ -14,7 +14,12 @@
     "resolveJsonModule": true,
     "noEmit": false,
     "jsx": "react",
-    "types": ["chrome"]
+    "types": ["chrome", "node"],
+    "baseUrl": "src",
+    "paths": {
+      // "@global-stores/*": ["global-stores/*"]
+    },
+    "typeRoots": ["node_modules/@types", "src/types"]
   },
   "include": ["src"],
   "exclude": ["build", "node_modules"]

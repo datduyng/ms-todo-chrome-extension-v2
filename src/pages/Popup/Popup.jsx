@@ -1,23 +1,53 @@
 import React, { useState } from 'react';
+import { firstTimeOauth2AndSaveToStore } from '../../global-stores/auth-store';
 import logo from '../../assets/img/logo.svg';
-import Greetings from '../../containers/Greetings/Greetings';
-import Testcontainer from './test-container'
+import Testcontainer from './test-container';
 import useGlobalStore from '../../global-stores';
 import './popup.css';
 
 const Popup = () => {
-  const [todos, addTodo] = useGlobalStore(state => [state.todos, state.addTodo]);
+  const [todos, addTodo] = useGlobalStore((state) => [
+    state.todos,
+    state.addTodo,
+  ]);
   const [text, setText] = useState('');
   return (
     <div className="App">
       <Testcontainer />
-      <input type="text" value={text} onChange={(e) => setText(e.target.value)} />
-      <button onClick={() => {
-        console.log("adding", text);
-        addTodo(text)
-      }}>Add todo ---</button>
+      <button
+        onClick={() => {
+          chrome.windows.create({
+            // Just use the full URL if you need to open an external page
+            url: chrome.runtime.getURL('popup.html'),
+          });
+        }}
+      >
+        New tab
+      </button>
+      <button
+        onClick={() => {
+          firstTimeOauth2AndSaveToStore();
+        }}
+      >
+        Sign in with MS
+      </button>
+      <input
+        type="text"
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+      />
+      <button
+        onClick={() => {
+          console.log('adding', text);
+          addTodo(text);
+        }}
+      >
+        Add todo ---
+      </button>
       <ul>
-        {todos.map(todo => <li key={todo}>{todo}</li>)}
+        {todos.map((todo) => (
+          <li key={todo}>{todo}</li>
+        ))}
       </ul>
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
@@ -30,7 +60,7 @@ const Popup = () => {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Learn React! tetsing 
+          Learn React! tetsing
         </a>
       </header>
     </div>

@@ -7,6 +7,16 @@ var webpack = require('webpack'),
   HtmlWebpackPlugin = require('html-webpack-plugin'),
   TerserPlugin = require('terser-webpack-plugin');
 
+const dotenv = require('dotenv');
+const react_env = dotenv.config({
+  path: '.env.local' // todo take care of production env
+}).parsed;
+const reactEnvDict = Object.keys(react_env).reduce((prev, next) => {
+  prev[`process.env.${next}`] = JSON.stringify(react_env[next]);
+  return prev;
+}, {});
+console.log('reactEnvDict', reactEnvDict);
+
 const ASSET_PATH = process.env.ASSET_PATH || '/';
 
 var alias = {
@@ -116,6 +126,7 @@ var options = {
     }),
     // expose and write the allowed env vars on the compiled bundle
     new webpack.EnvironmentPlugin(['NODE_ENV']),
+    new webpack.DefinePlugin(reactEnvDict),
     new CopyWebpackPlugin({
       patterns: [
         {
