@@ -3,6 +3,7 @@ import useGlobalStore from '../../global-stores';
 
 import { AllRoutesType } from '../../global-stores/route-store';
 
+import Layout from './layout';
 import LoadingPage from './pages/loading-page';
 import LoginPage from './pages/login-page';
 import OfflinePage from './pages/offline-page';
@@ -49,10 +50,10 @@ const App = () => {
   const ifCurrentRouteIs = (route: AllRoutesType) => currentRoute === route;
   return (
     <>
-      {ifCurrentRouteIs('LOADING_ROUTE') && <LoadingPage />}
-      {ifCurrentRouteIs('LOGIN_ROUTE') && <LoginPage />}
+      {ifCurrentRouteIs('LOADING_ROUTE') && <Layout><LoadingPage /></Layout>}
+      {ifCurrentRouteIs('LOGIN_ROUTE') && <Layout><LoginPage /></Layout>}
       {ifCurrentRouteIs('OFFLINE_ROUTE') && <OfflinePage />}
-      {ifCurrentRouteIs('HOME_ROUTE') && <HomePage />}
+      {ifCurrentRouteIs('HOME_ROUTE') && <Layout><HomePage /></Layout>}
     </>
   );
 };
