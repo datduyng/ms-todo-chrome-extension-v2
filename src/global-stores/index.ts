@@ -1,12 +1,7 @@
 import createStore, { SetState, GetState } from 'zustand';
 import { devtools, persist, StateStorage } from 'zustand/middleware';
 import RouteStore, { RouteStoreType } from './route-store';
-
-if (!(window as any).SLANTED_LAB_DEBUG) {
-  (window as any).SLANTED_LAB_DEBUG = {
-    routeHistory: [],
-  };
-}
+import AuthStore, { AuthStoreType } from './auth-store';
 
 type BaseStore = {
   version: string;
@@ -18,21 +13,21 @@ const baseStore = (set: SetState<BaseStore>, get: GetState<BaseStore>) => ({
 
 export const combineStateCreators =
   (...stateCreators: any) =>
-  (set: any, get: any, api: any) => {
-    let values = {};
+    (set: any, get: any, api: any) => {
+      let values = {};
 
-    stateCreators.forEach((sc: any) => {
-      values = Object.assign({}, values, sc(set, get, api));
-    });
-    return values;
-  };
+      stateCreators.forEach((sc: any) => {
+        values = Object.assign({}, values, sc(set, get, api));
+      });
+      return values;
+    };
 
 type TestStore = {
   todos: string[];
   addTodo: () => void;
 };
 
-type GlobalStoreType = BaseStore & TestStore & RouteStoreType;
+type GlobalStoreType = BaseStore & TestStore & RouteStoreType & AuthStoreType;
 
 const testStore = (set: SetState<TestStore>, get: GetState<TestStore>) => ({
   todos: ['todo 1 ', 'todo 2'],
@@ -44,7 +39,7 @@ const testStore = (set: SetState<TestStore>, get: GetState<TestStore>) => ({
   },
 });
 
-const states = combineStateCreators(baseStore, testStore, RouteStore);
+const states = combineStateCreators(baseStore, testStore, RouteStore, AuthStore);
 
 const backgroundWindow = chrome.extension.getBackgroundPage();
 

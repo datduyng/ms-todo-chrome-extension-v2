@@ -1,15 +1,27 @@
+import { timeStamp } from 'console';
 import { create as createPKCE } from 'pkce';
+import { SetState, GetState } from 'zustand';
+
 
 const MS_AUTH_KEY = 'ms-auth-storage';
 let localStorage =
   chrome.extension.getBackgroundPage()?.localStorage || window.localStorage;
 
-type AuthStore = {
+if (!(window as any).SLANTED_LAB_DEBUG) {
+  (window as any).SLANTED_LAB_DEBUG = {
+    AUTH: {},
+    routeHistory: [],
+  };
+}
+
+type MSOauth2BearerType = { access_token: string; expires_in: number; refresh_token: string; }
+
+type UserBearerType = {
   version: string;
   access_token: string | undefined;
   refresh_token: string | undefined;
   expires_in: number | undefined;
-  expires_at: Date | undefined;
+  expires_at: number | undefined;
 };
 
 const initState = { version: '0.0.0' };
@@ -73,8 +85,9 @@ export function firstTimeOauth2AndSaveToStore() {
             } as any).toString(),
           })
             .then((data) => data.json())
-            .then((data) => {
+            .then((data: MSOauth2BearerType) => {
               console.log('data resolves', data);
+              setUserBeaer(data)
               resolve();
             })
             .catch((e) => reject(e));
@@ -82,11 +95,39 @@ export function firstTimeOauth2AndSaveToStore() {
       );
     }
   ).catch(async (e) => {
+    console.error("some error", e);// todo
     // await clearStorage();
   });
 }
 
-export const init = async () => {
+function refreshToken(refresh_token: string): Promise<MSOauth2BearerType> {
+  return new Promise((resolve, reject) => {
+    fetch(`${oauthURL}/token`, {
+      method: "POST",
+      headers: {
+        "Content-type": "application/x-www-form-urlencoded",
+      },
+      credentials: 'omit',
+      body: `client_id=${clientID}&scope=${scope}&refresh_token=${refresh_token}&grant_type=refresh_token`,
+    })
+      .then((data) => data.json())
+      .then((data: MSOauth2BearerType) => {
+        console.log('refresh token data', data)
+        resolve(data);
+      })
+      .catch(async (err) => {
+        console.error("error when refreshing token", err); // todo.s
+      });
+  });
+}
+
+
+
+function timestamp() {
+  return Math.round(Date.now() / 1000);
+}
+
+const init = async () => {
   try {
     if (
       !localStorage[MS_AUTH_KEY] ||
@@ -103,10 +144,76 @@ export const init = async () => {
 
 init();
 
-export const get = () => {
-  return JSON.parse(localStorage[MS_AUTH_KEY] || '{}') as AuthStore;
+const getUserBearer = () => {
+  return JSON.parse(localStorage[MS_AUTH_KEY] || '{}') as UserBearerType | null;
 };
 
-export const set = (newState: AuthStore) => {
-  localStorage[MS_AUTH_KEY] = JSON.stringify(newState);
+const setUserBeaer = (data: MSOauth2BearerType | null) => {
+  localStorage[MS_AUTH_KEY] = data != null ? JSON.stringify({
+    version: initState.version,
+    access_token: data.access_token,
+    expires_in: data.expires_in,
+    refresh_token: data.refresh_token,
+    expires_at: timestamp() + data.expires_in
+  }) : null;
 };
+
+function isExpired(expiredAt: number | undefined) {
+  if (!expiredAt) {
+    return true;
+  }
+  const TOKEN_EXPIRATION_OFFSET = 30;
+  return expiredAt < timestamp() + TOKEN_EXPIRATION_OFFSET;
+}
+
+export type AuthStoreType = {
+  authenticated: boolean;
+  authenticateAsync: () => Promise<boolean>;
+  userAuthToken?: string;
+  logOut: () => void;
+}
+
+const authStore = (
+  set: SetState<AuthStoreType>,
+  get: GetState<AuthStoreType>
+) => ({
+  userAuthToken: '',
+  authenticateAsync: async (): Promise<boolean> => {
+    const userBearer = getUserBearer();
+    if (userBearer && userBearer.access_token) {
+      set({
+        userAuthToken: userBearer.access_token
+      });
+      if (isExpired(userBearer.expires_at)) {
+        // refresh token
+        const bearer = await refreshToken(userBearer.refresh_token || "");
+        setUserBeaer(bearer);
+      }
+      set({
+        authenticated: true
+      })
+      return true;
+    }
+
+    set({
+      authenticated: false
+    })
+    return false;
+  },
+  logOut: () => {
+    setUserBeaer(null);
+    set({
+      authenticated: false
+    })
+  }
+});
+
+(window as any).SLANTED_LAB_DEBUG.AUTH = {
+  firstTimeOauth2AndSaveToStore,
+  refreshToken
+}
+
+export default authStore;
+
+
+

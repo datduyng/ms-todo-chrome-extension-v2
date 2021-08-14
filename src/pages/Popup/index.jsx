@@ -1,7 +1,6 @@
 import React from 'react';
 import { render } from 'react-dom';
 
-import Popup from './Popup';
 import App from './app';
 import './index.css';
 

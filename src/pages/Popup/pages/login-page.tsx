@@ -1,7 +1,9 @@
 import React from 'react';
 import { firstTimeOauth2AndSaveToStore } from '../../../global-stores/auth-store';
+import useGlobalStore from '../../../global-stores';
 
 const Login = () => {
+  const [authenticateAsync] = useGlobalStore(state => [state.authenticateAsync]);
   return (
     <div>
       <h1>Login page</h1>
@@ -16,8 +18,9 @@ const Login = () => {
         New tab
       </button>
       <button
-        onClick={() => {
-          firstTimeOauth2AndSaveToStore();
+        onClick={async () => {
+          await firstTimeOauth2AndSaveToStore();
+          await authenticateAsync();
         }}
       >
         Sign in with MS

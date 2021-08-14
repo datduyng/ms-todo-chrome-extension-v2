@@ -15,6 +15,8 @@ const App = () => {
     state.changeRoute,
   ]);
 
+  const [authenticated, authenticateAsync] = useGlobalStore((state) => [state.authenticated, state.authenticateAsync]);
+
   useEffect(() => {
     // offline --> online ??
     // window.addEventListener('online', () => {
@@ -28,9 +30,20 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-    // if authenticate --> to home route else login route
-    changeRoute('LOGIN_ROUTE');
+
+    (async () => {
+      await authenticateAsync();
+    })()
   }, []);
+
+  useEffect(() => {
+    if (authenticated) {
+      changeRoute('HOME_ROUTE');
+    } else {
+      // if authenticate --> to home route else login route
+      changeRoute('LOGIN_ROUTE');
+    }
+  }, [authenticated])
 
   console.log('currentRoute', currentRoute);
   const ifCurrentRouteIs = (route: AllRoutesType) => currentRoute === route;

@@ -8,6 +8,13 @@ export type AllRoutesType =
 
 const DEFAULT_ROUTE: AllRoutesType = 'LOADING_ROUTE';
 
+if (!(window as any).SLANTED_LAB_DEBUG) {
+  (window as any).SLANTED_LAB_DEBUG = {
+    AUTH: {},
+    routeHistory: [],
+  };
+}
+
 export type RouteStoreType = {
   currentRoute: string;
   changeRoute: (route: AllRoutesType) => void;
