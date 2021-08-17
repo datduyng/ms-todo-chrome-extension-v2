@@ -58,6 +58,7 @@ const FolderView = () => {
       <div style={{ marginTop: '10px' }}>
         {taskFolders.map((taskFolder) => (
           <Button
+            key={taskFolder.id}
             appearance="subtle"
             shouldFitContainer
             style={{
