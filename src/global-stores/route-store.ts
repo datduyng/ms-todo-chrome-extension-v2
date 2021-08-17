@@ -12,6 +12,7 @@ if (!(window as any).SLANTED_LAB_DEBUG) {
   (window as any).SLANTED_LAB_DEBUG = {
     AUTH: {},
     routeHistory: [],
+    ZUSTAND: {},
   };
 }
 
