@@ -38,7 +38,8 @@ const FilterGroupTask = ({
 };
 
 const FolderView = () => {
-  const [taskFolders] = useGlobalStore((state) => [state.taskFolders]);
+  const [taskFolders, selectedFolderId, updateSelectedFolder] = useGlobalStore((state) => [state.taskFolders, state.selectedFolderId, state.updateSelectedFolder]);
+  console.log('selectedFolderId', selectedFolderId);
   return (
     <div style={{ margin: '2px' }}>
       <div style={{ display: 'flex', flexWrap: 'wrap' }}>
@@ -56,7 +57,7 @@ const FolderView = () => {
         />
       </div>
       <div style={{ marginTop: '10px' }}>
-        {taskFolders.map((taskFolder) => (
+        {taskFolders().map((taskFolder) => (
           <Button
             key={taskFolder.id}
             appearance="subtle"
@@ -68,6 +69,10 @@ const FolderView = () => {
               borderRadius: '10px',
             }}
             iconBefore={<ListIcon label={'list icon'} size={'medium'} />}
+            isSelected={taskFolder.id === selectedFolderId}
+            onClick={() => {
+              updateSelectedFolder(taskFolder.id);
+            }}
           >
             {taskFolder.name}
           </Button>

@@ -59,7 +59,7 @@ let store = createStore<GlobalStoreType>(
     persist(states, {
       name: 'slanted-lab-ms-todo',
       getStorage: () =>
-        (backgroundWindow?.localStorage as StateStorage) || undefined,
+        (backgroundWindow?.localStorage as StateStorage) || window.localStorage,
     })
   )
 );

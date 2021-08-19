@@ -16,9 +16,9 @@ const App = () => {
     state.changeRoute,
   ]);
 
-  const [authenticated, authenticateAsync] = useGlobalStore((state) => [
+  const [authenticated, ensureAuthenticatedAsync] = useGlobalStore((state) => [
     state.authenticated,
-    state.authenticateAsync,
+    state.ensureAuthenticatedAsync,
   ]);
 
   useEffect(() => {
@@ -35,7 +35,7 @@ const App = () => {
 
   useEffect(() => {
     (async () => {
-      await authenticateAsync();
+      await ensureAuthenticatedAsync();
     })();
   }, []);
 

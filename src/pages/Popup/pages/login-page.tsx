@@ -5,7 +5,7 @@ import microsoftLoginImage from "../../../assets/img/ms-symbollockup_signin_ligh
 import './login-page.css'
 
 const Login = () => {
-  const [authenticateAsync] = useGlobalStore(state => [state.authenticateAsync]);
+  const [ensureAuthenticatedAsync] = useGlobalStore(state => [state.ensureAuthenticatedAsync]);
   return (
     <div>
       <h1 id="header">Login page</h1>
@@ -23,7 +23,7 @@ const Login = () => {
       <div id="login">
         <img src={microsoftLoginImage} alt="MSFT Login" width="104" height="41" onClick={async () => {
           await firstTimeOauth2AndSaveToStore();
-          await authenticateAsync();
+          await ensureAuthenticatedAsync();
         }}></img>
       </div>
 
