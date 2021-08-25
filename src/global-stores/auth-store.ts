@@ -173,7 +173,7 @@ function isExpired(expiredAt: number | undefined) {
 
 export type AuthStoreType = {
   authenticated: boolean;
-  ensureAuthenticatedAsync: () => Promise<boolean>;
+  ensureAuthenticatedAsync: () => Promise<string>;
   userAuthToken: string;
   logOut: () => void;
 };
@@ -183,7 +183,7 @@ const authStore = (
   get: GetState<AuthStoreType>
 ) => ({
   userAuthToken: '',
-  ensureAuthenticatedAsync: async (): Promise<boolean> => {
+  ensureAuthenticatedAsync: async (): Promise<string> => {
     const userBearer = getUserBearer();
     if (userBearer && userBearer.access_token) {
       let access_token = userBearer.access_token;
@@ -197,14 +197,15 @@ const authStore = (
         authenticated: true,
         userAuthToken: access_token,
       });
-      return true;
+      return access_token;
     }
 
     set({
       authenticated: false,
       userAuthToken: '',
     });
-    return false;
+    // run first time oauth flow??
+    return '';
   },
   logOut: () => {
     setUserBeaer(null);
