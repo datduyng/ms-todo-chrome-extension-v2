@@ -10,6 +10,7 @@ export type TaskStoreType = {
   taskFolders: () => TaskFolderType[];
   fetchTaskFolders: () => Promise<any>;
   selectedFolderId: string | null;
+  selectedFolderInfo: () => TaskFolderType | null;
   updateSelectedFolder: (selectedFolderId: string | null) => void;
   renameTaskFolder: (folderId: string, newName: string) => Promise<any>;
   deleteTaskFolder: (folderId: string) => Promise<any>;
@@ -21,6 +22,11 @@ export const routeStore = (
 ) => ({
   taskFolderDict: {},
   selectedFolderId: null,
+  selectedFolderInfo: () => {
+    const globalStore = useGlobalStore.getState();
+    if (!globalStore.selectedFolderId) return null;
+    return globalStore.taskFolderDict[globalStore.selectedFolderId];
+  },
   taskFolders: () => {
     const globalStore = useGlobalStore.getState();
     return Object.values(globalStore.taskFolderDict);
