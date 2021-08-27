@@ -11,6 +11,8 @@ export const AllTaskView = () => {
   ]);
   const [newTask, setNewTask] = useState('');
   const selectedFolder = selectedFolderInfo();
+
+  console.log("Does this thing work?")
   return (
     <div style={{}}>
       <div
