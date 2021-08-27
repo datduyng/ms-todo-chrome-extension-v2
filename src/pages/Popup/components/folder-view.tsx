@@ -6,7 +6,6 @@ import Button from '@atlaskit/button';
 import ContextMenu from '../components/context-menu';
 
 import useGlobalStore from '../../../global-stores';
-import { randomInt } from 'crypto';
 
 const FilterGroupTask = ({
   name,
