@@ -15,26 +15,37 @@ const FilterGroupTask = ({
   icon: JSX.Element;
 }) => {
   return (
-    <div
+    <Button
       style={{
         height: '55px',
         width: '80px',
-        backgroundColor: '#F0F0F0',
-        borderRadius: '10px',
         margin: '2px',
+        // background: '#F0F0F0',
       }}
+      spacing={'none'}
     >
-      <div
-        style={{ marginTop: '4px', display: 'flex', justifyContent: 'center' }}
-      >
-        {icon}
+      <div>
+        {' '}
+        <div
+          style={{
+            marginTop: '4px',
+            display: 'flex',
+            justifyContent: 'center',
+          }}
+        >
+          {icon}
+        </div>
+        <div
+          style={{
+            marginTop: '1px',
+            display: 'flex',
+            justifyContent: 'center',
+          }}
+        >
+          {name}
+        </div>
       </div>
-      <div
-        style={{ marginTop: '4px', display: 'flex', justifyContent: 'center' }}
-      >
-        {name}
-      </div>
-    </div>
+    </Button>
   );
 };
 
@@ -76,10 +87,12 @@ const FolderView = () => {
   };
 
   return (
-    <div style={{
-      height: '100%'
-    }}>
-      <div style={{ display: 'flex', flexWrap: 'wrap', height: '25%' }}>
+    <div
+      style={{
+        height: '100%',
+      }}
+    >
+      <div style={{ display: 'flex', flexWrap: 'wrap', height: '25%', marginLeft: '2px', marginTop: '2px' }}>
         <FilterGroupTask
           name={'Today'}
           icon={<BiCalendarCheck fontSize={24} color={'gray'} />}
@@ -93,9 +106,20 @@ const FolderView = () => {
           icon={<BiCalendar fontSize={24} color={'gray'} />}
         />
       </div>
-      <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '75%', marginLeft: '4px', marginRight: '4px'}}>
-        <div className="hide-scrollbar" style={{maxHeight: '90%', overflowY: 'auto'}}>
-
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+          height: '75%',
+          marginLeft: '4px',
+          marginRight: '4px',
+        }}
+      >
+        <div
+          className="hide-scrollbar"
+          style={{ maxHeight: '90%', overflowY: 'auto' }}
+        >
           {taskFolders().map((taskFolder) => (
             <ContextMenu
               key={taskFolder.id}
@@ -149,25 +173,35 @@ const FolderView = () => {
         </div>
 
         <div>
-          <Button shouldFitContainer appearance={"subtle"}
-          onClick={async () => {
-            const defaultFolderName = `Untitled_${Date.now()}`;
-            const folderName = window.prompt("Enter folder name", defaultFolderName);
-            if (!folderName) {
-              if (folderName === '') {
-                window.alert("Folder name cannot be empty");
+          <Button
+            shouldFitContainer
+            appearance={'subtle'}
+            onClick={async () => {
+              const defaultFolderName = `Untitled_${Date.now()}`;
+              const folderName = window.prompt(
+                'Enter folder name',
+                defaultFolderName
+              );
+              if (!folderName) {
+                if (folderName === '') {
+                  window.alert('Folder name cannot be empty');
+                }
+                return;
               }
-              return;
-            }
-            const result = await createTaskFolder(folderName || defaultFolderName);
-            if (result && result.error) {
-              window.alert(result.error.message)
-            }
-          }} 
-          style={{
-            height: '30px',
-            font: '20px'
-          }}>+ Add list</Button>
+              const result = await createTaskFolder(
+                folderName || defaultFolderName
+              );
+              if (result && result.error) {
+                window.alert(result.error.message);
+              }
+            }}
+            style={{
+              height: '30px',
+              font: '20px',
+            }}
+          >
+            + Add list
+          </Button>
         </div>
       </div>
     </div>
