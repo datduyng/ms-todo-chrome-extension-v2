@@ -107,9 +107,9 @@ const HomePage = () => {
       <div style={{ width: '345px' }}>
         <AllTaskView />
       </div>
-      <div id="folderTasks">
+      {/* <div id="folderTasks">
           <FolderTasksView />
-      </div>
+      </div> */}
       
 
     </div>

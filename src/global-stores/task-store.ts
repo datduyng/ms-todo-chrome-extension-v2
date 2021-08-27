@@ -107,7 +107,7 @@ export const routeStore = (
     const userAuthToken = await globalStore.ensureAuthenticatedAsync();
     const result = await getTasksFromFolder(userAuthToken, folderId);
     return result;
-  }
+  },
   createTaskFolder: async (folderName: string) => {
     if (!folderName) return;
     const globalStore = useGlobalStore.getState();
