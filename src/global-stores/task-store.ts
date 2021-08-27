@@ -1,7 +1,7 @@
 import { SetState, GetState } from 'zustand';
 import { TaskFolderType, ErrorResponse } from 'types/ms-todo';
 
-import { getTaskFolders, getMe, deleteTaskFolder, updateTaskFolder, createTaskFolder } from '../pages/Popup/helpers/msTodoRestApi';
+import { getTaskFolders, getMe, deleteTaskFolder, updateTaskFolder, createTaskFolder, getTasksFromFolder } from '../pages/Popup/helpers/msTodoRestApi';
 
 import useGlobalStore from '../global-stores';
 
@@ -15,6 +15,7 @@ export type TaskStoreType = {
   renameTaskFolder: (folderId: string, newName: string) => Promise<any>;
   deleteTaskFolder: (folderId: string) => Promise<any>;
   createTaskFolder: (folderName: string) => Promise<TaskFolderType & ErrorResponse>;
+  getTasksFromFolder: (folderId: string) => Promise<any>;
 };
 
 export const routeStore = (
@@ -100,6 +101,12 @@ export const routeStore = (
         ...taskFolderDict
       }
     });
+  },
+  getTasksFromFolder: async (folderId: string) => {
+    const globalStore = useGlobalStore.getState();
+    const userAuthToken = await globalStore.ensureAuthenticatedAsync();
+    const result = await getTasksFromFolder(userAuthToken, folderId);
+    return result;
   },
   createTaskFolder: async (folderName: string) => {
     if (!folderName) return;

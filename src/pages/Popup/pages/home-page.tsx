@@ -11,11 +11,17 @@ import '../button.css';
 import { useEffect } from 'react';
 import { AllTaskView } from '../components/all-task-view';
 
+const getTaskUrl = 'https://graph.microsoft.com/beta/me/outlook/tasks?';
+const count = true;
+const top = 2147483647;
+const delta = true;
+
+
 const HomePage = () => {
-  const [userAuthToken, logOut, fetchTaskFolders] = useGlobalStore((state) => [
+  const [userAuthToken, logOut, fetchTaskFolders ] = useGlobalStore((state) => [
     state.userAuthToken,
     state.logOut,
-    state.fetchTaskFolders,
+    state.fetchTaskFolders
   ]);
 
   useEffect(() => {
@@ -23,6 +29,31 @@ const HomePage = () => {
       await fetchTaskFolders();
     })();
   }, []);
+
+  useEffect(() => {
+    // console.log("this is the start of the task queries");
+    // tokenStore();
+    // fetch(`${getTaskUrl}$count=${count}&$top=${top}&$delta=${delta}`, {
+    //   method: 'GET'
+    // }).then(response => response.json())
+    // .then(json => console.log(json))
+    (async () => {
+      // const tasks = await fetchTasksFromFolder('AQMkADAwATMwMAItYmIANGEtY2Q3ZC0wMAItMDAKAC4AAAMFPmfsTn1rT7VZiVMsKhDvAQBLoP4WpO8mQKxaCf5vR43yAAACARIAAAA');
+      // console.log('The tasks gotten from folder', tasks);
+    })
+
+  }, []);
+
+  /*
+  The fields I need:
+  $count
+  $top
+  $delta
+  */ 
+
+
+
+
 
   return (
     <div style={{ display: 'flex', height: '100%' }}>
@@ -77,6 +108,11 @@ const HomePage = () => {
         <AllTaskView />
         {/* <TaskView /> */}
       </div>
+      {/* <div id="folderTasks">
+          <FolderTasksView />
+      </div> */}
+      
+
     </div>
   );
 };

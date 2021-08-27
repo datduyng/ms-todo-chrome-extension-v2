@@ -88,3 +88,12 @@ export const deleteTaskFolder = (
 export const getMe = (bearer: string): Promise<any> => {
   return request('GET', ``, bearer);
 };
+
+export const getAllTasks = (
+  bearer: string,
+  count: boolean,
+  top: string,
+  delta: boolean
+): Promise<any> => {
+  return request('GET', `https://graph.microsoft.com/beta/me/outlook/tasks?$count=${count}&$top=${top}&$delta=${delta}`, bearer);
+}
