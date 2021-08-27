@@ -6,6 +6,7 @@ import { WiCloudRefresh } from 'react-icons/wi';
 import { getTaskFolders } from '../helpers/msTodoRestApi';
 import useGlobalStore from '../../../global-stores';
 import FolderView from '../components/folder-view';
+import TaskView from '../components/task-view';
 import '../button.css';
 import { useEffect } from 'react';
 import { AllTaskView } from '../components/all-task-view';
@@ -74,6 +75,7 @@ const HomePage = () => {
       <div style={{ width: '5px', backgroundColor: '#F0F0F0' }}></div>
       <div style={{ width: '345px' }}>
         <AllTaskView />
+        {/* <TaskView /> */}
       </div>
     </div>
   );
