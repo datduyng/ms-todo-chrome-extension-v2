@@ -15,6 +15,7 @@
   "dependencies": {
     "@atlaskit/button": "^16.0.0",
     "@atlaskit/icon": "^21.7.3",
+    "@atlaskit/textfield": "^5.1.0",
     "@typescript-eslint/parser": "^4.29.3",
     "pkce": "^1.0.0-beta2",
     "react": "^17.0.1",

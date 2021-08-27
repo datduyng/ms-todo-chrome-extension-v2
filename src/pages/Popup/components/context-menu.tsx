@@ -38,7 +38,7 @@ export default class ContextMenu extends React.Component<Props, State> {
     if (
       this.menuRef !== null 
       && event.target !== this.menuRef
-      // && !this.menuRef.contains(event.target as Node)
+      && !this.menuRef.contains(event.target as Node)
     ) {
       this.setState({
         open: false,

@@ -1,4 +1,4 @@
-import { TaskFolderType, TaskType } from 'types/ms-todo';
+import { TaskFolderType, TaskType, ErrorResponse } from 'types/ms-todo';
 
 const baseUrl = 'https://graph.microsoft.com/beta/me';
 
@@ -54,6 +54,17 @@ export const getTasksFromFolder = (
     headers: { Prefer: 'odata.track-changes' },
   });
 };
+
+export const createTaskFolder = (
+  bearer: string,
+  name: string
+): Promise<TaskFolderType & ErrorResponse> => {
+  return request('POST', `/outlook/taskfolders`, bearer, {
+    body: {
+      name,
+    },
+  });
+}
 
 export const updateTaskFolder = (
   bearer: string,

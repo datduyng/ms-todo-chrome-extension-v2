@@ -1,7 +1,7 @@
 import { SetState, GetState } from 'zustand';
-import { TaskFolderType } from 'types/ms-todo';
+import { TaskFolderType, ErrorResponse } from 'types/ms-todo';
 
-import { getTaskFolders, getMe, deleteTaskFolder, updateTaskFolder } from '../pages/Popup/helpers/msTodoRestApi';
+import { getTaskFolders, getMe, deleteTaskFolder, updateTaskFolder, createTaskFolder } from '../pages/Popup/helpers/msTodoRestApi';
 
 import useGlobalStore from '../global-stores';
 
@@ -14,6 +14,7 @@ export type TaskStoreType = {
   updateSelectedFolder: (selectedFolderId: string | null) => void;
   renameTaskFolder: (folderId: string, newName: string) => Promise<any>;
   deleteTaskFolder: (folderId: string) => Promise<any>;
+  createTaskFolder: (folderName: string) => Promise<TaskFolderType & ErrorResponse>;
 };
 
 export const routeStore = (
@@ -87,15 +88,31 @@ export const routeStore = (
   deleteTaskFolder: async (folderId: string) => {
     const globalStore = useGlobalStore.getState();
     const userAuthToken = await globalStore.ensureAuthenticatedAsync();
-    console.log('result  here');
     const result = await deleteTaskFolder(userAuthToken, folderId);
-    console.log('result', result);
     if (result && result.error) {
       return result;
     }
     const taskFolderDict = globalStore.taskFolderDict;
     delete taskFolderDict[folderId];
     console.log('taskFolderDict delete', taskFolderDict);
+    set({
+      taskFolderDict: {
+        ...taskFolderDict
+      }
+    });
+  },
+  createTaskFolder: async (folderName: string) => {
+    if (!folderName) return;
+    const globalStore = useGlobalStore.getState();
+    const userAuthToken = await globalStore.ensureAuthenticatedAsync();
+    const result = await createTaskFolder(userAuthToken, folderName);
+    if (result && result.error) {
+      return result;
+    }
+
+    const taskFolderDict = globalStore.taskFolderDict;
+
+    taskFolderDict[result.id] = result as TaskFolderType;
     set({
       taskFolderDict: {
         ...taskFolderDict

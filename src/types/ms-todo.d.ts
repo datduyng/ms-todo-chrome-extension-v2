@@ -7,3 +7,10 @@ export type TaskFolderType = {
   name: string;
   isDefaultFolder: boolean;
 };
+
+export type ErrorResponse = {
+  error?: {
+    code: string;
+    message: string;
+  }
+}

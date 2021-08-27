@@ -68,7 +68,7 @@ const HomePage = () => {
           <WiCloudRefresh fontSize={35} color={'gray'} />
         </div>
       </div>
-      <div style={{ width: '172px' }}>
+      <div style={{ width: '172px', height: '100%' }}>
         <FolderView />
       </div>
       <div style={{ width: '5px', backgroundColor: '#F0F0F0' }}></div>

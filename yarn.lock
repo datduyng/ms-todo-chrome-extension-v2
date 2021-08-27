@@ -56,6 +56,17 @@
     "@babel/runtime" "^7.0.0"
     "@emotion/core" "^10.0.9"
 
+"@atlaskit/textfield@^5.1.0":
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/@atlaskit/textfield/-/textfield-5.1.0.tgz#41a4b217c8b3e1b69f6b955abcc2c6e3ebb74d8e"
+  integrity sha512-0dBhVaQUm6fmr/8ZZgOO1b+MqzekoYVE0K3cl8z4EgGGo218+KmfuohpRzkMzNy0oD6tbaMR+sO86PlKrnlWdw==
+  dependencies:
+    "@atlaskit/analytics-next" "^8.2.0"
+    "@atlaskit/theme" "^11.4.0"
+    "@atlaskit/tokens" "^0.1.0"
+    "@babel/runtime" "^7.0.0"
+    "@emotion/core" "^10.0.9"
+
 "@atlaskit/theme@^11.3.0", "@atlaskit/theme@^11.4.0":
   version "11.4.1"
   resolved "https://registry.yarnpkg.com/@atlaskit/theme/-/theme-11.4.1.tgz#3427ad9105b1fdc228876ec78ed469306ec6a2c4"
@@ -70,6 +81,13 @@
   version "0.0.18"
   resolved "https://registry.yarnpkg.com/@atlaskit/tokens/-/tokens-0.0.18.tgz#4e5798659036190225f1b401a699cea6c0f0235a"
   integrity sha512-KeCCSSm5UXgcKnTOMN2N4KFcmAV/JG20YUbhuKZiVX6iv0GeO6d/aGAGX0PiaZoGVV1JiAlA11WMRiEQJWMLSg==
+  dependencies:
+    "@babel/runtime" "^7.0.0"
+
+"@atlaskit/tokens@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@atlaskit/tokens/-/tokens-0.1.0.tgz#9552be258372edfcb2031c60338b5987b7cf2788"
+  integrity sha512-D5nqI4jAbQYJwX1iVuGIa2Cr51QRrLL+hOhjMDEGj1nHkvgkIq0f24tAH8y5rUEW6/G7KGoDixHtvuw364Buug==
   dependencies:
     "@babel/runtime" "^7.0.0"
 
