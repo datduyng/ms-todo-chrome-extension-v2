@@ -25,3 +25,7 @@ code {
 .hide-scrollbar::-webkit-scrollbar {
   display: none; /* for Chrome, Safari, and Opera */
 }
+
+#myContentEditable:read-write:focus {
+  outline: none;
+}
