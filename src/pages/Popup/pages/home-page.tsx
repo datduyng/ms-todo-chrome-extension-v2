@@ -3,11 +3,10 @@ import { AiFillStar } from 'react-icons/ai';
 import { FiSettings, FiLogOut } from 'react-icons/fi';
 import { WiCloudRefresh } from 'react-icons/wi';
 
+import TaskView from '../components/task-view';
 import { getTaskFolders } from '../helpers/msTodoRestApi';
 import useGlobalStore from '../../../global-stores';
 import FolderView from '../components/folder-view';
-import TaskView from '../components/task-view';
-import FolderTasksView from '../components/folder-task-view';
 import '../button.css';
 import { useEffect } from 'react';
 import { AllTaskView } from '../components/all-task-view';
