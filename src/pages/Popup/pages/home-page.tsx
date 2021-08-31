@@ -18,46 +18,21 @@ const delta = true;
 
 
 const HomePage = () => {
-  const [userAuthToken, logOut, fetchTaskFolders, getTasksFromFolder, selectedTaskId ] = useGlobalStore((state) => [
+  const [userAuthToken, logOut, fetchTaskFolders, getTasksFromFolder, selectedTaskId, selectedFolderId ] = useGlobalStore((state) => [
     state.userAuthToken,
     state.logOut,
     state.fetchTaskFolders,
     state.getTasksFromFolder,
-    state.selectedTaskId
+    state.selectedTaskId,
+    state.selectedFolderId
   ]);
 
   useEffect(() => {
     (async () => {
       await fetchTaskFolders();
-      // Need to change this up to grab from default folder
-      await getTasksFromFolder("AQMkADAwATMwMAItYmIANGEtY2Q3ZC0wMAItMDAKAC4AAAMFPmfsTn1rT7VZiVMsKhDvAQBLoP4WpO8mQKxaCf5vR43yAAACARIAAAA=");
+      await getTasksFromFolder(String(selectedFolderId));
     })();
   }, []);
-
-  useEffect(() => {
-    // console.log("this is the start of the task queries");
-    // tokenStore();
-    // fetch(`${getTaskUrl}$count=${count}&$top=${top}&$delta=${delta}`, {
-    //   method: 'GET'
-    // }).then(response => response.json())
-    // .then(json => console.log(json))
-    (async () => {
-      // const tasks = await fetchTasksFromFolder('AQMkADAwATMwMAItYmIANGEtY2Q3ZC0wMAItMDAKAC4AAAMFPmfsTn1rT7VZiVMsKhDvAQBLoP4WpO8mQKxaCf5vR43yAAACARIAAAA');
-      // console.log('The tasks gotten from folder', tasks);
-    })
-
-  }, []);
-
-  /*
-  The fields I need:
-  $count
-  $top
-  $delta
-  */ 
-
-
-
-
 
   return (
     <div style={{ display: 'flex', height: '100%' }}>
