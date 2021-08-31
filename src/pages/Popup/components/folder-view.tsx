@@ -167,6 +167,7 @@ const FolderView = () => {
                 onClick={async () => {
                   updateSelectedFolder(taskFolder.id);
                   let tasksFromFolder = await getTasksFromFolder(taskFolder.id);
+                  console.log("Global task store for folder", useGlobalStore.getState().taskDict)
               	  console.log("Tasks retrieved from folder ", taskFolder.name, tasksFromFolder );
                 }}
               >

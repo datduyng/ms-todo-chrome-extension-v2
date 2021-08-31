@@ -5,14 +5,19 @@ import TextField from '@atlaskit/textfield';
 
 import useGlobalStore from '../../../global-stores';
 
+import Button from '@atlaskit/button';
+import { Checkbox } from '@atlaskit/checkbox';
+
 export const AllTaskView = () => {
-  const [selectedFolderInfo] = useGlobalStore((state) => [
+  const [taskFolders, selectedFolderId, tasksFromFolder, selectedFolderInfo] = useGlobalStore((state) => [
+    state.taskFolders,
+    state.selectedFolderId,
+    state.tasksFromFolder,
     state.selectedFolderInfo,
   ]);
   const [newTask, setNewTask] = useState('');
   const selectedFolder = selectedFolderInfo();
 
-  console.log("Does this thing work?")
   return (
     <div style={{}}>
       <div
@@ -70,6 +75,31 @@ export const AllTaskView = () => {
             }
           }}
         />
+      </div>
+
+      <div style={{
+        marginTop: '20px',
+        marginLeft: '10px',
+        marginRight: '10px'
+      }}>
+        {tasksFromFolder().map((task) => (
+          <Button
+            key={task.id}
+            appearance="subtle"
+            shouldFitContainer
+            style={{
+              marginTop: '7px',
+              textAlign: 'left',
+              height: '30px',
+              fontSize: '15px',
+              borderRadius: '10px',
+              width: '325px',
+            }}
+            iconBefore={<Checkbox label={'list icon'} size={'large'} />}
+            >
+            {task.subject}
+          </Button>
+        ))}
       </div>
     </div>
   );

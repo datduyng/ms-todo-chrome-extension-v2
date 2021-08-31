@@ -1,5 +1,6 @@
 export type TaskType = {
   id: string;
+  subject: string;
 };
 
 export type TaskFolderType = {

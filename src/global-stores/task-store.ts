@@ -1,5 +1,5 @@
 import { SetState, GetState } from 'zustand';
-import { TaskFolderType, ErrorResponse } from 'types/ms-todo';
+import { TaskFolderType, TaskType, ErrorResponse } from 'types/ms-todo';
 
 import { getTaskFolders, getMe, deleteTaskFolder, updateTaskFolder, createTaskFolder, getTasksFromFolder } from '../pages/Popup/helpers/msTodoRestApi';
 
@@ -7,7 +7,9 @@ import useGlobalStore from '../global-stores';
 
 export type TaskStoreType = {
   taskFolderDict: { [id: string]: TaskFolderType };
+  taskDict: { [id: string]: TaskType };
   taskFolders: () => TaskFolderType[];
+  tasksFromFolder: () => TaskType[];
   fetchTaskFolders: () => Promise<any>;
   selectedFolderId: string | null;
   selectedFolderInfo: () => TaskFolderType | null;
@@ -15,7 +17,7 @@ export type TaskStoreType = {
   renameTaskFolder: (folderId: string, newName: string) => Promise<any>;
   deleteTaskFolder: (folderId: string) => Promise<any>;
   createTaskFolder: (folderName: string) => Promise<TaskFolderType & ErrorResponse>;
-  getTasksFromFolder: (folderId: string) => Promise<any>;
+  getTasksFromFolder: (folderId: string) => TaskType[];
 };
 
 export const routeStore = (
@@ -32,6 +34,10 @@ export const routeStore = (
   taskFolders: () => {
     const globalStore = useGlobalStore.getState();
     return Object.values(globalStore.taskFolderDict);
+  },
+  tasksFromFolder: () => {
+    const globalStore = useGlobalStore.getState();
+    return Object.values(globalStore.taskDict);
   },
   updateSelectedFolder: (selectedFolderId: string | null) => {
     set({
@@ -105,8 +111,16 @@ export const routeStore = (
   getTasksFromFolder: async (folderId: string) => {
     const globalStore = useGlobalStore.getState();
     const userAuthToken = await globalStore.ensureAuthenticatedAsync();
-    const result = await getTasksFromFolder(userAuthToken, folderId);
-    return result;
+    const tasks = await getTasksFromFolder(userAuthToken, folderId);
+    const taskDict = globalStore.taskDict;
+    for (let task of tasks.value) {
+      taskDict[task.id] = task;
+    }
+    set({
+      taskDict: {
+        ...taskDict
+      }
+    });
   },
   createTaskFolder: async (folderName: string) => {
     if (!folderName) return;

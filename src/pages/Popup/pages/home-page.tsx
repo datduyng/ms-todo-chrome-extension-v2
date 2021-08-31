@@ -3,10 +3,10 @@ import { AiFillStar } from 'react-icons/ai';
 import { FiSettings, FiLogOut } from 'react-icons/fi';
 import { WiCloudRefresh } from 'react-icons/wi';
 
+import TaskView from '../components/task-view';
 import { getTaskFolders } from '../helpers/msTodoRestApi';
 import useGlobalStore from '../../../global-stores';
 import FolderView from '../components/folder-view';
-import TaskView from '../components/task-view';
 import '../button.css';
 import { useEffect } from 'react';
 import { AllTaskView } from '../components/all-task-view';
@@ -18,15 +18,18 @@ const delta = true;
 
 
 const HomePage = () => {
-  const [userAuthToken, logOut, fetchTaskFolders ] = useGlobalStore((state) => [
+  const [userAuthToken, logOut, fetchTaskFolders, getTasksFromFolder ] = useGlobalStore((state) => [
     state.userAuthToken,
     state.logOut,
-    state.fetchTaskFolders
+    state.fetchTaskFolders,
+    state.getTasksFromFolder,
   ]);
 
   useEffect(() => {
     (async () => {
       await fetchTaskFolders();
+      // Need to change this up to grab from default folder
+      await getTasksFromFolder("AQMkADAwATMwMAItYmIANGEtY2Q3ZC0wMAItMDAKAC4AAAMFPmfsTn1rT7VZiVMsKhDvAQBLoP4WpO8mQKxaCf5vR43yAAACARIAAAA=");
     })();
   }, []);
 
@@ -108,11 +111,6 @@ const HomePage = () => {
         {/* <AllTaskView /> */}
         <TaskView />
       </div>
-      {/* <div id="folderTasks">
-          <FolderTasksView />
-      </div> */}
-      
-
     </div>
   );
 };
