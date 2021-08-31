@@ -34,31 +34,6 @@ const HomePage = () => {
     })();
   }, []);
 
-  useEffect(() => {
-    // console.log("this is the start of the task queries");
-    // tokenStore();
-    // fetch(`${getTaskUrl}$count=${count}&$top=${top}&$delta=${delta}`, {
-    //   method: 'GET'
-    // }).then(response => response.json())
-    // .then(json => console.log(json))
-    (async () => {
-      // const tasks = await fetchTasksFromFolder('AQMkADAwATMwMAItYmIANGEtY2Q3ZC0wMAItMDAKAC4AAAMFPmfsTn1rT7VZiVMsKhDvAQBLoP4WpO8mQKxaCf5vR43yAAACARIAAAA');
-      // console.log('The tasks gotten from folder', tasks);
-    })
-
-  }, []);
-
-  /*
-  The fields I need:
-  $count
-  $top
-  $delta
-  */ 
-
-
-
-
-
   return (
     <div style={{ display: 'flex', height: '100%' }}>
       <div
