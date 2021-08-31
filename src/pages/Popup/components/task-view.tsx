@@ -18,6 +18,7 @@ const TaskView = () => {
       <div
         style={{
           display: 'flex',
+          marginTop: '10px',
           marginLeft: '10px',
           marginRight: '10px',
           justifyContent: 'space-between',
@@ -53,7 +54,7 @@ const TaskView = () => {
           <CalendarIcon label="calendar icon" size="medium" primaryColor="gray"/>
         </div>
         <div style={{ width: '70%', paddingLeft: '6px', paddingRight: '5px' }}>
-          <DateTimePicker />
+          <DateTimePicker appearance={"subtle"} defaultValue={"default"}/>
         </div>
         <div style={{ width: '10%' }}>
           <Button

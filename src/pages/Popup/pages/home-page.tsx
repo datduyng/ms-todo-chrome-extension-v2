@@ -105,8 +105,8 @@ const HomePage = () => {
       </div>
       <div style={{ width: '5px', backgroundColor: '#F0F0F0' }}></div>
       <div style={{ width: '345px' }}>
-        <AllTaskView />
-        {/* <TaskView /> */}
+        {/* <AllTaskView /> */}
+        <TaskView />
       </div>
       {/* <div id="folderTasks">
           <FolderTasksView />
