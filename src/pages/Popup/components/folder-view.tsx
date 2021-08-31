@@ -53,7 +53,7 @@ const FolderView = () => {
   const [
     taskFolders,
     selectedFolderId,
-    updateSelectedFolder,
+    selectFolder,
     renameTaskFolder,
     deleteTaskFolder,
     createTaskFolder,
@@ -61,7 +61,7 @@ const FolderView = () => {
   ] = useGlobalStore((state) => [
     state.taskFolders,
     state.selectedFolderId,
-    state.updateSelectedFolder,
+    state.selectFolder,
     state.renameTaskFolder,
     state.deleteTaskFolder,
     state.createTaskFolder,
@@ -165,7 +165,7 @@ const FolderView = () => {
                 iconBefore={<ListIcon label={'list icon'} size={'medium'} />}
                 isSelected={taskFolder.id === selectedFolderId}
                 onClick={async () => {
-                  updateSelectedFolder(taskFolder.id);
+                  selectFolder(taskFolder.id);
                   let tasksFromFolder = await getTasksFromFolder(taskFolder.id);
                   console.log("Global task store for folder", useGlobalStore.getState().taskDict)
               	  console.log("Tasks retrieved from folder ", taskFolder.name, tasksFromFolder );

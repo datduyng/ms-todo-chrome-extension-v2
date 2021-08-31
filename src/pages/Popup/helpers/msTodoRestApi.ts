@@ -1,4 +1,4 @@
-import { TaskFolderType, TaskType, ErrorResponse } from 'types/ms-todo';
+import { TaskFolderType, TaskType, ErrorResponse, TaskStatusType } from 'types/ms-todo';
 
 const baseUrl = 'https://graph.microsoft.com/beta/me';
 
@@ -89,11 +89,14 @@ export const getMe = (bearer: string): Promise<any> => {
   return request('GET', ``, bearer);
 };
 
-export const getAllTasks = (
-  bearer: string,
-  count: boolean,
-  top: string,
-  delta: boolean
-): Promise<any> => {
-  return request('GET', `https://graph.microsoft.com/beta/me/outlook/tasks?$count=${count}&$top=${top}&$delta=${delta}`, bearer);
+export const updateTask = (bearer: string, taskId: string, updateTaskInput: {
+  subject?: string,
+  body?: {
+    content: string 
+  },
+  status?: TaskStatusType
+}): Promise<any> => {
+  return request('PATCH', `/tasks/${taskId}`, bearer, {
+    body: JSON.stringify(updateTaskInput)
+  })
 }

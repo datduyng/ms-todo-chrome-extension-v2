@@ -9,11 +9,12 @@ import Button from '@atlaskit/button';
 import { Checkbox } from '@atlaskit/checkbox';
 
 export const AllTaskView = () => {
-  const [taskFolders, selectedFolderId, tasksFromFolder, selectedFolderInfo] = useGlobalStore((state) => [
+  const [taskFolders, selectedFolderId, tasksFromFolder, selectedFolderInfo, selectTask] = useGlobalStore((state) => [
     state.taskFolders,
     state.selectedFolderId,
     state.tasksFromFolder,
     state.selectedFolderInfo,
+    state.selectTask,
   ]);
   const [newTask, setNewTask] = useState('');
   const selectedFolder = selectedFolderInfo();
@@ -94,6 +95,9 @@ export const AllTaskView = () => {
               fontSize: '15px',
               borderRadius: '10px',
               width: '325px',
+            }}
+            onClick={() => {
+              selectTask(task.id);
             }}
             iconBefore={<Checkbox label={'list icon'} size={'large'} />}
             >

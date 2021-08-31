@@ -18,11 +18,12 @@ const delta = true;
 
 
 const HomePage = () => {
-  const [userAuthToken, logOut, fetchTaskFolders, getTasksFromFolder ] = useGlobalStore((state) => [
+  const [userAuthToken, logOut, fetchTaskFolders, getTasksFromFolder, selectedTaskId ] = useGlobalStore((state) => [
     state.userAuthToken,
     state.logOut,
     state.fetchTaskFolders,
     state.getTasksFromFolder,
+    state.selectedTaskId
   ]);
 
   useEffect(() => {
@@ -108,8 +109,8 @@ const HomePage = () => {
       </div>
       <div style={{ width: '5px', backgroundColor: '#F0F0F0' }}></div>
       <div style={{ width: '345px' }}>
-        {/* <AllTaskView /> */}
-        <TaskView />
+        {!selectedTaskId && <AllTaskView />}
+        {selectedTaskId && <TaskView />}
       </div>
     </div>
   );

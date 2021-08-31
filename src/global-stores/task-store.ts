@@ -8,12 +8,17 @@ import useGlobalStore from '../global-stores';
 export type TaskStoreType = {
   taskFolderDict: { [id: string]: TaskFolderType };
   taskDict: { [id: string]: TaskType };
+  defaultSelectedFolderId: string | null;
+  selectedFolderId: string | null;
+  selectedTaskId: string | null;
+  savingTaskStatus: boolean;
   taskFolders: () => TaskFolderType[];
   tasksFromFolder: () => TaskType[];
   fetchTaskFolders: () => Promise<any>;
-  selectedFolderId: string | null;
   selectedFolderInfo: () => TaskFolderType | null;
-  updateSelectedFolder: (selectedFolderId: string | null) => void;
+  selectedTaskInfo: () => TaskType | null;
+  selectFolder: (selectedFolderId: string | null) => void;
+  selectTask: (selectedTaskId: string | null) => void;
   renameTaskFolder: (folderId: string, newName: string) => Promise<any>;
   deleteTaskFolder: (folderId: string) => Promise<any>;
   createTaskFolder: (folderName: string) => Promise<TaskFolderType & ErrorResponse>;
@@ -25,11 +30,20 @@ export const routeStore = (
   get: GetState<TaskStoreType>
 ) => ({
   taskFolderDict: {},
+  taskDict: {},
+  defaultSelectedFolderId: null,
   selectedFolderId: null,
+  selectedTaskId: null,
+  savingTaskStatus: false,
   selectedFolderInfo: () => {
     const globalStore = useGlobalStore.getState();
     if (!globalStore.selectedFolderId) return null;
     return globalStore.taskFolderDict[globalStore.selectedFolderId];
+  },
+  selectedTaskInfo: () => {
+    const globalStore = useGlobalStore.getState();
+    if (!globalStore.selectedTaskId) return null;
+    return globalStore.taskDict[globalStore.selectedTaskId];
   },
   taskFolders: () => {
     const globalStore = useGlobalStore.getState();
@@ -39,9 +53,15 @@ export const routeStore = (
     const globalStore = useGlobalStore.getState();
     return Object.values(globalStore.taskDict);
   },
-  updateSelectedFolder: (selectedFolderId: string | null) => {
+  selectFolder: (selectedFolderId: string | null) => {
     set({
-      selectedFolderId
+      selectedFolderId,
+      selectedTaskId: null 
+    })
+  },
+  selectTask: (selectedTaskId: string | null) => {
+    set({
+      selectedTaskId
     })
   },
   fetchTaskFolders: async () => {
@@ -58,6 +78,7 @@ export const routeStore = (
       taskFolderDict[taskFolder.id] = taskFolder;
       if (taskFolder.isDefaultFolder && !globalStore.selectedFolderId) {
         set({
+          defaultSelectedFolderId: taskFolder.id,
           selectedFolderId: taskFolder.id
         })
       }
@@ -102,7 +123,13 @@ export const routeStore = (
     const taskFolderDict = globalStore.taskFolderDict;
     delete taskFolderDict[folderId];
     console.log('taskFolderDict delete', taskFolderDict);
+    if (folderId === globalStore.selectedFolderId) {
+      set({
+        selectedFolderId: globalStore.defaultSelectedFolderId
+      })
+    }
     set({
+      selectedTaskId: null,
       taskFolderDict: {
         ...taskFolderDict
       }
