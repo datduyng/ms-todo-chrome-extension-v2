@@ -1,7 +1,7 @@
 import { SetState, GetState } from 'zustand';
-import { TaskFolderType, TaskType, ErrorResponse } from 'types/ms-todo';
+import { TaskFolderType, TaskType, ErrorResponse, UpdateTaskInputType } from 'types/ms-todo';
 
-import { getTaskFolders, getMe, deleteTaskFolder, updateTaskFolder, createTaskFolder, getTasksFromFolder } from '../pages/Popup/helpers/msTodoRestApi';
+import { getTaskFolders, getMe, deleteTaskFolder, updateTaskFolder, createTaskFolder, getTasksFromFolder, updateTask } from '../pages/Popup/helpers/msTodoRestApi';
 
 import useGlobalStore from '../global-stores';
 
@@ -23,6 +23,7 @@ export type TaskStoreType = {
   deleteTaskFolder: (folderId: string) => Promise<any>;
   createTaskFolder: (folderName: string) => Promise<TaskFolderType & ErrorResponse>;
   getTasksFromFolder: (folderId: string) => TaskType[];
+  updateTaskById: (taskId: string, updateTaskInputType: UpdateTaskInputType) => Promise<TaskType & ErrorResponse>;
 };
 
 export const routeStore = (
@@ -148,6 +149,28 @@ export const routeStore = (
         ...taskDict
       }
     });
+  },
+  updateTaskById: async (taskId: string, updateTaskInputType: UpdateTaskInputType) => {
+    if (!taskId) return;
+    const globalStore = useGlobalStore.getState();
+    const userAuthToken = await globalStore.ensureAuthenticatedAsync();
+    set({
+      savingTaskStatus: true
+    })
+    const result = await updateTask(userAuthToken, taskId, updateTaskInputType);
+
+    if (result && result.error) {
+      return result;
+    }
+    const taskDict = globalStore.taskDict;
+
+    taskDict[result.id] = result as TaskType;
+    set({
+      taskDict: {
+        ...taskDict,
+      },
+      savingTaskStatus: false
+    })
   },
   createTaskFolder: async (folderName: string) => {
     if (!folderName) return;

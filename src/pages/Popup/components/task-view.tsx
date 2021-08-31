@@ -1,17 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
+import debounce from 'lodash.debounce';
 import { Checkbox } from '@atlaskit/checkbox';
 import StarFilledIcon from '@atlaskit/icon/glyph/star-filled';
 import StarIcon from '@atlaskit/icon/glyph/star';
 import ArrowLeftIcon from '@atlaskit/icon/glyph/arrow-left';
 import CalendarIcon from '@atlaskit/icon/glyph/calendar';
 
+import ContentEditable from 'react-contenteditable';
+
 import Button from '@atlaskit/button';
 import { DateTimePicker } from '@atlaskit/datetime-picker';
 
 import useGlobalStore from '../../../global-stores';
 import { useEffect } from 'react';
-import { TaskType } from 'types/ms-todo';
+import { TaskType, UpdateTaskInputType } from 'types/ms-todo';
 
+function useInterval(callback: () => {}, delay: number) {
+  const savedCallback = useRef(() => {});
+
+  // Remember the latest callback.
+  useEffect(() => {
+    savedCallback.current = callback;
+  }, [callback]);
+
+  // Set up the interval.
+  useEffect(() => {
+    function tick() {
+      savedCallback.current();
+    }
+    if (delay !== null) {
+      let id = setInterval(tick, delay);
+      return () => clearInterval(id);
+    }
+  }, [delay]);
+}
 const defaultTask = {
   subject: '',
   body: {
@@ -21,13 +43,27 @@ const defaultTask = {
   importance: 'normal',
 } as TaskType;
 const TaskView = () => {
-  const [selectTask, selectedTaskInfo] = useGlobalStore((state) => [
+  const [
+    selectTask,
+    selectedTaskInfo,
+    updateTaskById,
+    selectedTaskId,
+    savingTaskStatus,
+  ] = useGlobalStore((state) => [
     state.selectTask,
     state.selectedTaskInfo,
+    state.updateTaskById,
+    state.selectedTaskId,
+    state.savingTaskStatus,
   ]);
   const currentTask = selectedTaskInfo();
   const [isBodyEmpty, setIsBodyEmpty] = useState(true);
-  const [taskForm, setTaskForm] = useState(defaultTask);
+  const [taskForm, setTaskForm] = useState(currentTask || defaultTask);
+
+  const updateTaskForm = (value: React.SetStateAction<TaskType>) => {
+    setTaskForm(value);
+    debouncedSubjectSave(value);
+  };
   const [isDirtyTaskSync, SetIsDirtyTaskSync] = useState(false);
   useEffect(() => {
     let htmlParser = new DOMParser();
@@ -38,17 +74,17 @@ const TaskView = () => {
     let textBody =
       htmlNoteDOM.getElementsByClassName('PlainText')[0]?.textContent || '';
     setIsBodyEmpty(textBody?.trim()?.length > 0 ? false : true);
-    setTaskForm(currentTask || defaultTask);
   }, [currentTask?.body.content]);
 
-  useEffect(() => {
-    setTaskForm(currentTask || defaultTask);
-  }, [
-    currentTask?.subject,
-    currentTask?.body.content,
-    currentTask?.status,
-    currentTask?.importance,
-  ]);
+  const debouncedSubjectSave = useRef(
+    debounce(async (nextValue) => {
+      const result = await updateTaskById(selectedTaskId || '', nextValue);
+      if (result && result.error?.code) {
+      } else {
+        SetIsDirtyTaskSync(false);
+      }
+    }, 1000)
+  ).current;
 
   return (
     <div>
@@ -77,9 +113,9 @@ const TaskView = () => {
             isChecked={taskForm.status === 'completed'}
             onChange={(e) => {
               SetIsDirtyTaskSync(true);
-              setTaskForm({
+              updateTaskForm({
                 ...taskForm,
-                status: e.currentTarget.checked ? 'completed' : 'notStarted'
+                status: e.currentTarget.checked ? 'completed' : 'notStarted',
               });
             }}
             name="checkbox-default"
@@ -118,7 +154,7 @@ const TaskView = () => {
             }
             onClick={() => {
               SetIsDirtyTaskSync(true);
-              setTaskForm({
+              updateTaskForm({
                 ...taskForm,
                 importance: taskForm.importance === 'high' ? 'normal' : 'high',
               });
@@ -136,58 +172,52 @@ const TaskView = () => {
           textAlign: 'right',
         }}
       >
-        {isDirtyTaskSync ? 'not saved' : ''}
+        {savingTaskStatus ? 'Saving' : isDirtyTaskSync ? 'Not saved' : 'Saved'}
       </div>
       <div
         style={{
           margin: '15px',
         }}
       >
-        <div
-          contentEditable={true}
+        <ContentEditable
           id="myContentEditable"
+          html={taskForm.subject}
+          onChange={(e) => {
+            SetIsDirtyTaskSync(true);
+            console.log('subject', e.target.value);
+            updateTaskForm({
+              ...taskForm,
+              subject: e.target.value,
+            });
+          }}
           style={{
             fontWeight: 'bold',
             fontSize: '20px',
             maxHeight: '70px',
             overflowY: 'auto',
           }}
-          onInput={(e) => {
+        />
+
+        <ContentEditable
+          id="myContentEditable"
+          html={isBodyEmpty ? 'Description' : taskForm.body.content || ''}
+          onChange={(e) => {
             SetIsDirtyTaskSync(true);
-            setTaskForm({
-              ...taskForm,
-              subject: e.currentTarget.innerHTML,
-            });
-          }}
-          suppressContentEditableWarning={true}
-        >
-          {taskForm.subject}
-        </div>
-        <div
-          onInput={(e) => {
-            console.log('e', e.currentTarget.innerHTML);
-            SetIsDirtyTaskSync(true);
-            setTaskForm({
+            updateTaskForm({
               ...taskForm,
               body: {
                 ...taskForm.body,
-                content: e.currentTarget.innerHTML,
+                content: e.target.value,
               },
             });
           }}
-          contentEditable={true}
-          id="myContentEditable"
           style={{
             fontSize: '13px',
             marginTop: '15px',
-            height: '340px',
+            height: '310px',
             overflowY: 'auto',
           }}
-          dangerouslySetInnerHTML={{
-            __html: isBodyEmpty ? 'Description' : taskForm.body.content || '',
-          }}
-          suppressContentEditableWarning={true}
-        ></div>
+        />
       </div>
     </div>
   );

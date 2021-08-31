@@ -11,6 +11,15 @@ export type TaskType = {
   status: TaskStatusType;
 };
 
+export type UpdateTaskInputType = {
+  subject?: string;
+  body?: {
+    content: string 
+  };
+  status?: TaskStatusType;
+  importance: TaskImportanceType;
+};
+
 
 
 export type TaskFolderType = {
