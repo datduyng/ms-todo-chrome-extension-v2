@@ -5,6 +5,7 @@ import { getTaskFolders, getMe, deleteTaskFolder, updateTaskFolder, createTaskFo
 
 import useGlobalStore from '../global-stores';
 
+
 export type TaskStoreType = {
   taskFolderDict: { [id: string]: TaskFolderType };
   taskDict: { [id: string]: TaskType };
@@ -139,6 +140,7 @@ export const routeStore = (
     const globalStore = useGlobalStore.getState();
     const userAuthToken = await globalStore.ensureAuthenticatedAsync();
     const tasks = await getTasksFromFolder(userAuthToken, folderId);
+    globalStore.taskDict = {};
     const taskDict = globalStore.taskDict;
     for (let task of tasks.value) {
       taskDict[task.id] = task;

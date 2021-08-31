@@ -18,19 +18,19 @@ const delta = true;
 
 
 const HomePage = () => {
-  const [userAuthToken, logOut, fetchTaskFolders, getTasksFromFolder, selectedTaskId ] = useGlobalStore((state) => [
+  const [userAuthToken, logOut, fetchTaskFolders, getTasksFromFolder, selectedTaskId, selectedFolderId ] = useGlobalStore((state) => [
     state.userAuthToken,
     state.logOut,
     state.fetchTaskFolders,
     state.getTasksFromFolder,
-    state.selectedTaskId
+    state.selectedTaskId,
+    state.selectedFolderId
   ]);
 
   useEffect(() => {
     (async () => {
       await fetchTaskFolders();
-      // Need to change this up to grab from default folder
-      await getTasksFromFolder("AQMkADAwATMwMAItYmIANGEtY2Q3ZC0wMAItMDAKAC4AAAMFPmfsTn1rT7VZiVMsKhDvAQBLoP4WpO8mQKxaCf5vR43yAAACARIAAAA=");
+      await getTasksFromFolder(String(selectedFolderId));
     })();
   }, []);
 
