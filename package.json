@@ -12,9 +12,9 @@
     "build:zip": "node ./scripts/build.js; zip -r extension.zip build",
     "start": "node ./scripts/webserver.js",
     "prettier": "prettier --write '**/*.{js,jsx,css,html}'",
-    "pre-release:patch": "node ./scripts/release -r=patch",
-    "pre-release:minor": "node ./scripts/release -r=minor",
-    "pre-release:major": "node ./scripts/release -r=major"
+    "pre-release:patch": "node ./scripts/pre-release -r=patch",
+    "pre-release:minor": "node ./scripts/pre-release -r=minor",
+    "pre-release:major": "node ./scripts/pre-release -r=major"
   },
   "dependencies": {
     "@atlaskit/button": "^16.0.0",
