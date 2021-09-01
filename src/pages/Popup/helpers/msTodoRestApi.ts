@@ -106,6 +106,12 @@ export const updateTask = (bearer: string, taskId: string, updateTaskInput: Upda
   if (updateTaskInput.status) {
     data.status = updateTaskInput.status;
   }
+  if (updateTaskInput.dueDateTime) {
+    data.dueDateTime = {
+      dateTime: updateTaskInput.dueDateTime.dateTime,
+      timeZone: updateTaskInput.dueDateTime.timeZone,
+    }
+  }
   return request('PATCH', `/outlook/tasks/${taskId}`, bearer, {
     body: data
   })

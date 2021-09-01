@@ -15,25 +15,6 @@ import useGlobalStore from '../../../global-stores';
 import { useEffect } from 'react';
 import { TaskType, UpdateTaskInputType } from 'types/ms-todo';
 
-function useInterval(callback: () => {}, delay: number) {
-  const savedCallback = useRef(() => {});
-
-  // Remember the latest callback.
-  useEffect(() => {
-    savedCallback.current = callback;
-  }, [callback]);
-
-  // Set up the interval.
-  useEffect(() => {
-    function tick() {
-      savedCallback.current();
-    }
-    if (delay !== null) {
-      let id = setInterval(tick, delay);
-      return () => clearInterval(id);
-    }
-  }, [delay]);
-}
 const defaultTask = {
   subject: '',
   body: {
@@ -42,6 +23,17 @@ const defaultTask = {
   status: 'notStarted',
   importance: 'normal',
 } as TaskType;
+
+function convertTZ(date: Date, tzString: string) {
+  return new Date(new Date(date).toLocaleString('en-US', { timeZone: tzString }));
+}
+
+const currentTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+const getDisplayDate = (dateTime: string | undefined) =>
+  dateTime ? convertTZ(new Date(dateTime), currentTimeZone).toISOString() : '';
+const getUtcFromDisplayDate = (dateTime: string) =>
+  new Date(dateTime).toISOString();
+
 const TaskView = () => {
   const [
     selectTask,
@@ -83,9 +75,10 @@ const TaskView = () => {
       } else {
         SetIsDirtyTaskSync(false);
       }
-    }, 1000)
+    }, 500)
   ).current;
 
+  console.log('display', getDisplayDate(taskForm.dueDateTime?.dateTime));
   return (
     <div>
       <div
@@ -140,7 +133,28 @@ const TaskView = () => {
           />
         </div>
         <div style={{ width: '70%', paddingLeft: '6px', paddingRight: '5px' }}>
-          <DateTimePicker appearance={'subtle'} defaultValue={'default'} />
+          <DateTimePicker
+            appearance={'subtle'}
+            defaultValue={'default'}
+            datePickerProps={{
+              onChange: (value) => {
+                value = value + 'T13:00:00.000Z'
+                SetIsDirtyTaskSync(true);
+                updateTaskForm({
+                  ...taskForm,
+                  dueDateTime: {
+                    timeZone: taskForm.dueDateTime?.timeZone || 'UTC',
+                    dateTime: getUtcFromDisplayDate(value),
+                  },
+                });
+              },
+              value:
+                getDisplayDate(taskForm?.dueDateTime?.dateTime) || undefined,
+            }}
+            timePickerProps={{
+              isDisabled: true,
+            }}
+          />
         </div>
         <div style={{ width: '10%' }}>
           <Button
@@ -184,7 +198,6 @@ const TaskView = () => {
           html={taskForm.subject}
           onChange={(e) => {
             SetIsDirtyTaskSync(true);
-            console.log('subject', e.target.value);
             updateTaskForm({
               ...taskForm,
               subject: e.target.value,

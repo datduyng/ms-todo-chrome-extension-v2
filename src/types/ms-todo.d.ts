@@ -9,6 +9,10 @@ export type TaskType = {
   };
   importance: TaskImportanceType;
   status: TaskStatusType;
+  dueDateTime?: {
+    dateTime: string;
+    timeZone: string;
+  }
 };
 
 export type UpdateTaskInputType = {
@@ -17,7 +21,11 @@ export type UpdateTaskInputType = {
     content: string 
   };
   status?: TaskStatusType;
-  importance: TaskImportanceType;
+  importance?: TaskImportanceType;
+  dueDateTime?: {
+    dateTime: string;
+    timeZone: string;
+  }
 };
 
 
