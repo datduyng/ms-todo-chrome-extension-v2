@@ -6,7 +6,7 @@ const fs = require('fs');
 var argv = require('yargs/yargs')(process.argv.slice(2))
   .alias('h', 'help')
   .help('help')
-  .usage('Usage: node ./scripts/release.js')
+  .usage('Usage: node ./scripts/pre-release.js')
 
   .alias('r', 'release')
   .describe('r', 'Release type')
