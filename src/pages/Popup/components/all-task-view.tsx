@@ -109,7 +109,6 @@ const ButtonDiv = styled.div`
   font-size: inherit;
   font-style: normal;
   font-family: inherit;
-  font-weight: 500;
   max-width: 100%;
   height: 50px;
   position: relative;
@@ -159,13 +158,13 @@ const TaskItem = ({ task }: { task: TaskType }) => {
     state.selectTask,
     state.updateTaskById,
   ]);
-  
+  const completedTask = task.status === 'completed';
   return (
     <ButtonDiv>
       <div>
         <Checkbox
           size={'large'}
-          isChecked={task.status === 'completed'}
+          isChecked={completedTask}
           onChange={async (e) => {
             await updateTaskById(task.id, {
               status: e.currentTarget.checked ? 'completed' : 'notStarted'
@@ -174,7 +173,10 @@ const TaskItem = ({ task }: { task: TaskType }) => {
         />
       </div>
       <ButtonDivContent
-        style={{}}
+        style={{
+          fontWeight: completedTask ? 300 : 500,
+          textDecoration: completedTask ? 'line-through' : 'none'
+        }}
         onClick={() => {
           selectTask(task.id);
         }}
