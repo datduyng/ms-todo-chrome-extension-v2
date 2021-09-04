@@ -12,7 +12,8 @@ export type TaskType = {
   dueDateTime?: {
     dateTime: string;
     timeZone: string;
-  }
+  };
+  parentFolderId: string;
 };
 
 export type UpdateTaskInputType = {

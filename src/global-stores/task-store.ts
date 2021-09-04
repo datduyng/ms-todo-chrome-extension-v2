@@ -53,7 +53,29 @@ export const routeStore = (
   },
   tasksFromFolder: () => {
     const globalStore = useGlobalStore.getState();
-    return Object.values(globalStore.taskDict);
+    const taskList = Object.values(globalStore.taskDict);
+
+    // filter here
+    const selectedFolderId = globalStore.selectedFolderId;
+
+    let filter = (task: TaskType) => task.parentFolderId === selectedFolderId;
+
+    if (selectedFolderId === 'TODAY_TASK') {
+      filter = (task: TaskType) => {
+        const taskDate = new Date(task.dueDateTime?.dateTime || "");
+        const today = new Date();
+        return task.dueDateTime !== null 
+        && taskDate.getFullYear() === today.getFullYear()
+        && taskDate.getMonth() === today.getMonth()
+        && taskDate.getDate() === today.getDate();
+      }
+    } else if (selectedFolderId === 'IMPORTANT_TASK') {
+      filter = (task: TaskType) => task.importance === 'high';
+    } else if (selectedFolderId === 'SCHEDULED_TASK') {
+      filter = (task: TaskType) => task.dueDateTime !== null && task.dueDateTime?.dateTime != null;
+    }
+
+    return taskList.filter(filter);
   },
   selectFolder: (selectedFolderId: string | null) => {
     set({

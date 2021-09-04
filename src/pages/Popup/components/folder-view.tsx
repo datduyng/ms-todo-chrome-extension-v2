@@ -9,11 +9,21 @@ import useGlobalStore from '../../../global-stores';
 
 const FilterGroupTask = ({
   name,
+  groupId,
   icon,
 }: {
   name: string;
+  groupId: "TODAY_TASK" | "SCHEDULED_TASK" | "IMPORTANT_TASK";
   icon: JSX.Element;
 }) => {
+  const [
+    selectedFolderId,
+    selectFolder,
+  ] = useGlobalStore((state) => [
+    state.selectedFolderId,
+    state.selectFolder
+  ]);
+
   return (
     <Button
       style={{
@@ -22,7 +32,11 @@ const FilterGroupTask = ({
         margin: '2px',
         // background: '#F0F0F0',
       }}
+      isSelected={selectedFolderId === groupId}
       spacing={'none'}
+      onClick={() => {
+        selectFolder(groupId)
+      }}
     >
       <div>
         {' '}
@@ -96,14 +110,17 @@ const FolderView = () => {
     >
       <div style={{ display: 'flex', flexWrap: 'wrap', height: '25%', marginLeft: '2px', marginTop: '2px' }}>
         <FilterGroupTask
+          groupId={'TODAY_TASK'}
           name={'Today'}
           icon={<BiCalendarCheck fontSize={24} color={'gray'} />}
         />
         <FilterGroupTask
+          groupId={'IMPORTANT_TASK'}
           name={'Important'}
           icon={<AiFillStar fontSize={24} color={'gray'} />}
         />
         <FilterGroupTask
+          groupId={'SCHEDULED_TASK'}
           name={'Scheduled'}
           icon={<BiCalendar fontSize={24} color={'gray'} />}
         />
