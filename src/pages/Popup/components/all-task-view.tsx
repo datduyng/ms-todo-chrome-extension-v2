@@ -5,16 +5,14 @@ import TextField from '@atlaskit/textfield';
 
 import useGlobalStore from '../../../global-stores';
 
-import Button from '@atlaskit/button';
+import Button, { Appearance, CustomThemeButton } from '@atlaskit/button';
 import { Checkbox } from '@atlaskit/checkbox';
-
+import { TaskType } from 'types/ms-todo';
+import styled from 'styled-components';
 export const AllTaskView = () => {
-  const [taskFolders, selectedFolderId, tasksFromFolder, selectedFolderInfo, selectTask] = useGlobalStore((state) => [
-    state.taskFolders,
-    state.selectedFolderId,
+  const [tasksFromFolder, selectedFolderInfo] = useGlobalStore((state) => [
     state.tasksFromFolder,
     state.selectedFolderInfo,
-    state.selectTask,
   ]);
   const [newTask, setNewTask] = useState('');
   const selectedFolder = selectedFolderInfo();
@@ -58,13 +56,15 @@ export const AllTaskView = () => {
         </div>
       </div>
 
-      <div style={{
-        marginLeft: '10px',
-        marginRight: '10px'
-      }}>
+      <div
+        style={{
+          marginLeft: '10px',
+          marginRight: '10px',
+        }}
+      >
         <TextField
           style={{
-            backgroundColor: '#F1F1F1'
+            backgroundColor: '#F1F1F1',
           }}
           placeholder={'Add task and press enter to save'}
           value={newTask}
@@ -78,33 +78,109 @@ export const AllTaskView = () => {
         />
       </div>
 
-      <div style={{
-        marginTop: '20px',
-        marginLeft: '10px',
-        marginRight: '10px'
-      }}>
-        {tasksFromFolder().map((task) => (
-          <Button
-            key={task.id}
-            appearance="subtle"
-            shouldFitContainer
-            style={{
-              marginTop: '7px',
-              textAlign: 'left',
-              height: '30px',
-              fontSize: '15px',
-              borderRadius: '10px',
-              width: '325px',
-            }}
-            onClick={() => {
-              selectTask(task.id);
-            }}
-            iconBefore={<Checkbox label={'list icon'} size={'large'} />}
-            >
-            {task.subject}
-          </Button>
-        ))}
+      <div
+        style={{
+          marginTop: '20px',
+          marginLeft: '10px',
+          marginRight: '10px',
+        }}
+      >
+        <div
+          style={{
+            overflowY: 'auto',
+            maxHeight: '370px',
+          }}
+        >
+          {tasksFromFolder().map((task) => (
+            <TaskItem task={task} />
+          ))}
+        </div>
       </div>
     </div>
+  );
+};
+
+const ButtonDiv = styled.div`
+  align-items: center;
+  border-width: 0;
+  border-radius: 3px;
+  box-sizing: border-box;
+  display: flex;
+  font-size: inherit;
+  font-style: normal;
+  font-family: inherit;
+  font-weight: 500;
+  max-width: 100%;
+  height: 50px;
+  position: relative;
+  text-align: center;
+  text-decoration: none;
+  transition: background 0.1s ease-out,
+    box-shadow 0.15s cubic-bezier(0.47, 0.03, 0.49, 1.38);
+  white-space: nowrap;
+  background: none;
+  color: #42526e !important;
+  cursor: pointer;
+  line-height: 2.2857142857142856em;
+  padding: 0 10px;
+  vertical-align: middle;
+  width: 100%;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  &:hover {
+    background: rgba(9, 30, 66, 0.08);
+    color: #42526e !important;
+    -webkit-text-decoration: inherit;
+    text-decoration: inherit;
+    -webkit-transition-duration: 0s, 0.15s;
+    transition-duration: 0s, 0.15s;
+  }
+`;
+
+const ButtonDivContent = styled.div`
+  transition: opacity 0.3s;
+  opacity: 1;
+  margin: 0 2px;
+  flex-grow: 1;
+  -webkit-flex-shrink: 1;
+  -ms-flex-negative: 1;
+  flex-shrink: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: left;
+  display: table-cell;
+  vertical-align: middle;
+`;
+
+const TaskItem = ({ task }: { task: TaskType }) => {
+  const [selectTask, updateTaskById] = useGlobalStore((state) => [
+    state.selectTask,
+    state.updateTaskById,
+  ]);
+  
+  return (
+    <ButtonDiv>
+      <div>
+        <Checkbox
+          size={'large'}
+          isChecked={task.status === 'completed'}
+          onChange={async (e) => {
+            await updateTaskById(task.id, {
+              status: e.currentTarget.checked ? 'completed' : 'notStarted'
+            })
+          }}
+        />
+      </div>
+      <ButtonDivContent
+        style={{}}
+        onClick={() => {
+          selectTask(task.id);
+        }}
+      >
+        {task.subject}
+      </ButtonDivContent>
+    </ButtonDiv>
   );
 };

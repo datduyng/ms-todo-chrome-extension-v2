@@ -29,3 +29,16 @@ code {
 #myContentEditable:read-write:focus {
   outline: none;
 }
+
+.btn-div {
+  background: 'white';
+  /* -webkit-transition: background-color 1s ease-in;
+  -moz-transition: background-color 1s ease-in;
+  -o-transition: background-color 1s ease-in; */
+  transition: background, 2s;
+}
+
+.btn-div:hover {
+  background-color: 'gray';
+  cursor: pointer;
+}
