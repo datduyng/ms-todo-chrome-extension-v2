@@ -75,7 +75,13 @@ export const routeStore = (
       filter = (task: TaskType) => task.dueDateTime !== null && task.dueDateTime?.dateTime != null;
     }
 
-    return taskList.filter(filter);
+    return taskList.filter(filter).sort((t1: TaskType, t2: TaskType) => {
+      if (t1.status === 'completed') {
+        return 1;
+      } else {
+        return -1;
+      }
+    });
   },
   selectFolder: (selectedFolderId: string | null) => {
     set({
