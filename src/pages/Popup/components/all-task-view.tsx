@@ -76,12 +76,13 @@ export const AllTaskView = () => {
             if (e.key === 'Enter') {
               // Make api call to add task here
               setNewTask('');
-              createTaskInFolder(newTask, String(selectedFolderId));
-            }
-          }}
-          onKeyUp={(e) => {
-            if (e.key === 'Enter') {
-              getTasksFromFolder(String(selectedFolderId));
+              if(newTask === ''){
+                return;
+              }
+              else{
+                createTaskInFolder(newTask, String(selectedFolderId));
+              }
+              
             }
           }}
         />

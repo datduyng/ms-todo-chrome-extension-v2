@@ -241,16 +241,16 @@ export const routeStore = (
     if (result && result.error) {
       return result;
     }
-    console.log("The result of calling the create Task API", result);
 
-    // const taskFolderDict = globalStore.taskFolderDict;
+    const taskDict = globalStore.taskDict;
 
-    // taskFolderDict[result.id] = result as TaskType;
-    // set({
-    //   taskFolderDict: {
-    //     ...taskFolderDict
-    //   }
-    // });
+    taskDict[result.id] = result as TaskType;
+    set({
+      taskDict: {
+        ...taskDict,
+      },
+      savingTaskStatus: false
+    })
   }
 });
 
