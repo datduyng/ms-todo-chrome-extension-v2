@@ -106,13 +106,20 @@ export function firstTimeOauth2AndSaveToStore() {
 
 function refreshToken(refresh_token: string): Promise<MSOauth2BearerType> {
   return new Promise((resolve, reject) => {
+    const body = new URLSearchParams({
+      client_id: clientID,
+      scope,
+      refresh_token,
+      grant_type: 'refresh_token',
+      redirect_uri
+    } as any).toString();
     fetch(`${oauthURL}/token`, {
       method: 'POST',
       headers: {
         'Content-type': 'application/x-www-form-urlencoded',
       },
       credentials: 'omit',
-      body: `client_id=${clientID}&scope=${scope}&refresh_token=${refresh_token}&grant_type=refresh_token`,
+      body,
     })
       .then((data) => data.json())
       .then((data: MSOauth2BearerType) => {
@@ -164,11 +171,12 @@ const setUserBeaer = (data: MSOauth2BearerType | null) => {
 };
 
 function isExpired(expiredAt: number | undefined) {
-  if (!expiredAt) {
-    return true;
-  }
-  const TOKEN_EXPIRATION_OFFSET = 30;
-  return expiredAt < timestamp() + TOKEN_EXPIRATION_OFFSET;
+  return true;
+  // if (!expiredAt) {
+  //   return true;
+  // }
+  // const TOKEN_EXPIRATION_OFFSET = 30;
+  // return expiredAt < timestamp() + TOKEN_EXPIRATION_OFFSET;
 }
 
 export type AuthStoreType = {
