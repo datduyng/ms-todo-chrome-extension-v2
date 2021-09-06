@@ -24,7 +24,7 @@ const HomePage = () => {
     state.fetchTaskFolders,
     state.getTasksFromFolder,
     state.selectedTaskId,
-    state.selectedFolderId
+    state.selectedFolderId,
   ]);
 
   useEffect(() => {

@@ -89,6 +89,18 @@ export const getMe = (bearer: string): Promise<any> => {
   return request('GET', ``, bearer);
 };
 
+export const createTaskInFolder = (
+  bearer: string,
+  subject: string,
+  folder: string
+): Promise<TaskType & ErrorResponse> => {
+  return request('POST', `/outlook/taskfolders('${folder}')/tasks`, bearer, {
+    body: {
+      subject,
+    },
+  });
+}
+
 export const updateTask = (bearer: string, taskId: string, updateTaskInput: UpdateTaskInputType): Promise<TaskType & ErrorResponse> => {
   const data = {} as any;
   if (updateTaskInput.subject) {
@@ -112,6 +124,9 @@ export const updateTask = (bearer: string, taskId: string, updateTaskInput: Upda
       timeZone: updateTaskInput.dueDateTime.timeZone,
     }
   }
+
+
+  
   return request('PATCH', `/outlook/tasks/${taskId}`, bearer, {
     body: data
   })
