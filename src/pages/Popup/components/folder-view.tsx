@@ -108,7 +108,7 @@ const FolderView = () => {
         height: '100%',
       }}
     >
-      <div style={{ display: 'flex', flexWrap: 'wrap', height: '25%', marginLeft: '2px', marginTop: '2px' }}>
+      {/* <div style={{ display: 'flex', flexWrap: 'wrap', height: '25%', marginLeft: '2px', marginTop: '2px' }}>
         <FilterGroupTask
           groupId={'TODAY_TASK'}
           name={'Today'}
@@ -124,13 +124,13 @@ const FolderView = () => {
           name={'Scheduled'}
           icon={<BiCalendar fontSize={24} color={'gray'} />}
         />
-      </div>
+      </div> */}
       <div
         style={{
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'space-between',
-          height: '75%',
+          height: '100%',
           marginLeft: '4px',
           marginRight: '4px',
         }}

@@ -5,6 +5,11 @@ import { getTaskFolders, getMe, deleteTaskFolder, updateTaskFolder, createTaskFo
 
 import useGlobalStore from '../global-stores';
 
+const GROUP_FILTERS = {
+  TODAY_TASK: 'Today',
+  SCHEDULED_TASK: 'Scheduled',
+  IMPORTANT_TASK: 'Important',  
+} as any;
 
 export type TaskStoreType = {
   taskFolderDict: { [id: string]: TaskFolderType };
@@ -37,9 +42,16 @@ export const routeStore = (
   selectedFolderId: null,
   selectedTaskId: null,
   savingTaskStatus: false,
-  selectedFolderInfo: () => {
+  selectedFolderInfo: (): TaskFolderType | null => {
     const globalStore = useGlobalStore.getState();
     if (!globalStore.selectedFolderId) return null;
+    if (Object.keys(GROUP_FILTERS).includes(globalStore.selectedFolderId)) {
+      return {
+        id: globalStore.selectedFolderId,
+        name: GROUP_FILTERS[globalStore.selectedFolderId],
+        isDefaultFolder: false
+      }
+    }
     return globalStore.taskFolderDict[globalStore.selectedFolderId];
   },
   selectedTaskInfo: () => {

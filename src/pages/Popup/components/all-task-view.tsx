@@ -43,7 +43,7 @@ export const AllTaskView = () => {
           </div>
         </div>
 
-        <div
+        {/* <div
           style={{
             display: 'flex',
           }}
@@ -53,7 +53,7 @@ export const AllTaskView = () => {
           </div>
 
           <div style={{ fontSize: '17px' }}>sort</div>
-        </div>
+        </div> */}
       </div>
 
       <div
