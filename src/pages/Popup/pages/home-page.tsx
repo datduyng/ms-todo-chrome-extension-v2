@@ -3,6 +3,8 @@ import { AiFillStar } from 'react-icons/ai';
 import { FiSettings, FiLogOut } from 'react-icons/fi';
 import { WiCloudRefresh } from 'react-icons/wi';
 
+import Button from '@atlaskit/button';
+
 import TaskView from '../components/task-view';
 import { getTaskFolders } from '../helpers/msTodoRestApi';
 import useGlobalStore from '../../../global-stores';
@@ -16,9 +18,15 @@ const count = true;
 const top = 2147483647;
 const delta = true;
 
-
 const HomePage = () => {
-  const [userAuthToken, logOut, fetchTaskFolders, getTasksFromFolder, selectedTaskId, selectedFolderId ] = useGlobalStore((state) => [
+  const [
+    userAuthToken,
+    logOut,
+    fetchTaskFolders,
+    getTasksFromFolder,
+    selectedTaskId,
+    selectedFolderId,
+  ] = useGlobalStore((state) => [
     state.userAuthToken,
     state.logOut,
     state.fetchTaskFolders,
@@ -44,7 +52,7 @@ const HomePage = () => {
           flexDirection: 'column-reverse',
         }}
       >
-        <div
+        {/* <div
           className={'btn-hover-effect'}
           style={{
             height: '40px',
@@ -54,30 +62,36 @@ const HomePage = () => {
           }}
           onClick={logOut}
         >
-          <FiLogOut fontSize={24} color={'gray'} />
-        </div>
-        <div
-          className={'btn-hover-effect'}
+          
+        </div> */}
+        <Button
           style={{
             height: '40px',
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
           }}
-        >
-          <FiSettings fontSize={24} color={'gray'} />
-        </div>
-        <div
-          className={'btn-hover-effect'}
+          iconBefore={<FiLogOut fontSize={24} color={'gray'} />}
+          onClick={logOut}
+        ></Button>
+        <Button
           style={{
             height: '40px',
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
           }}
-        >
-          <WiCloudRefresh fontSize={35} color={'gray'} />
-        </div>
+          iconBefore={<FiSettings fontSize={24} color={'gray'} />}
+        ></Button>
+        <Button
+          style={{
+            height: '40px',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+          iconBefore={<WiCloudRefresh fontSize={35} color={'gray'} />}
+        ></Button>
       </div>
       <div style={{ width: '172px', height: '100%' }}>
         <FolderView />
