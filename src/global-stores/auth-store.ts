@@ -183,6 +183,7 @@ export type AuthStoreType = {
   ensureAuthenticatedAsync: () => Promise<string>;
   userAuthToken: string;
   logOut: () => void;
+  
 };
 
 const authStore = (
@@ -220,7 +221,7 @@ const authStore = (
       authenticated: false,
       userAuthToken: '',
     });
-  },
+  }
 });
 
 (window as any).SLANTED_LAB_DEBUG.AUTH = {

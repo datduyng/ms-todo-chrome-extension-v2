@@ -4,6 +4,7 @@ import { TaskFolderType, TaskType, ErrorResponse, UpdateTaskInputType } from 'ty
 import { getTaskFolders, getMe, deleteTaskFolder, updateTaskFolder, createTaskFolder, getTasksFromFolder, updateTask, createTaskInFolder } from '../pages/Popup/helpers/msTodoRestApi';
 
 import useGlobalStore from '../global-stores';
+import { WiCloudRefresh } from 'react-icons/wi';
 
 const GROUP_FILTERS = {
   TODAY_TASK: 'Today',
@@ -18,6 +19,7 @@ export type TaskStoreType = {
   selectedFolderId: string | null;
   selectedTaskId: string | null;
   savingTaskStatus: boolean;
+  cloudRefreshStatus: boolean;
   taskFolders: () => TaskFolderType[];
   tasksFromFolder: () => TaskType[];
   fetchTaskFolders: () => Promise<any>;
@@ -31,6 +33,7 @@ export type TaskStoreType = {
   getTasksFromFolder: (folderId: string) => TaskType[];
   updateTaskById: (taskId: string, updateTaskInputType: UpdateTaskInputType) => Promise<TaskType & ErrorResponse>;
   createTaskInFolder: (taskName: string, folderId: string) => Promise<TaskType & ErrorResponse>;
+  cloudRefresh: () => Promise<any>;
 };
 
 export const routeStore = (
@@ -43,6 +46,7 @@ export const routeStore = (
   selectedFolderId: null,
   selectedTaskId: null,
   savingTaskStatus: false,
+  cloudRefreshStatus: false,
   selectedFolderInfo: (): TaskFolderType | null => {
     const globalStore = useGlobalStore.getState();
     if (!globalStore.selectedFolderId) return null;
@@ -251,7 +255,19 @@ export const routeStore = (
       },
       savingTaskStatus: false
     })
-  }
+  },
+  cloudRefresh: async () => {
+    const globalStore = useGlobalStore.getState();
+    set({
+      cloudRefreshStatus: true
+    });
+    await globalStore.fetchTaskFolders();  
+    await globalStore.getTasksFromFolder(String(globalStore.selectedFolderId));
+    console.log("CLOUD REFRESH");
+    set({
+      cloudRefreshStatus: false
+    });
+  },
 });
 
 export default routeStore;
