@@ -171,12 +171,11 @@ const setUserBeaer = (data: MSOauth2BearerType | null) => {
 };
 
 function isExpired(expiredAt: number | undefined) {
-  return true;
-  // if (!expiredAt) {
-  //   return true;
-  // }
-  // const TOKEN_EXPIRATION_OFFSET = 30;
-  // return expiredAt < timestamp() + TOKEN_EXPIRATION_OFFSET;
+  if (!expiredAt) {
+    return true;
+  }
+  const TOKEN_EXPIRATION_OFFSET = 30;
+  return expiredAt < timestamp() + TOKEN_EXPIRATION_OFFSET;
 }
 
 export type AuthStoreType = {
