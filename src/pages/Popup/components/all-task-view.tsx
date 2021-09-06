@@ -10,9 +10,12 @@ import { Checkbox } from '@atlaskit/checkbox';
 import { TaskType } from 'types/ms-todo';
 import styled from 'styled-components';
 export const AllTaskView = () => {
-  const [tasksFromFolder, selectedFolderInfo] = useGlobalStore((state) => [
+  const [tasksFromFolder, selectedFolderInfo, createTaskInFolder, selectedFolderId, getTasksFromFolder] = useGlobalStore((state) => [
     state.tasksFromFolder,
     state.selectedFolderInfo,
+    state.createTaskInFolder,
+    state.selectedFolderId,
+    state.getTasksFromFolder
   ]);
   const [newTask, setNewTask] = useState('');
   const selectedFolder = selectedFolderInfo();
@@ -73,6 +76,12 @@ export const AllTaskView = () => {
             if (e.key === 'Enter') {
               // Make api call to add task here
               setNewTask('');
+              createTaskInFolder(newTask, String(selectedFolderId));
+            }
+          }}
+          onKeyUp={(e) => {
+            if (e.key === 'Enter') {
+              getTasksFromFolder(String(selectedFolderId));
             }
           }}
         />
@@ -152,6 +161,10 @@ const ButtonDivContent = styled.div`
   display: table-cell;
   vertical-align: middle;
 `;
+
+function delay(ms: number) {
+  return new Promise( resolve => setTimeout(resolve, ms) );
+}
 
 const TaskItem = ({ task }: { task: TaskType }) => {
   const [selectTask, updateTaskById] = useGlobalStore((state) => [

@@ -1,7 +1,7 @@
 import { SetState, GetState } from 'zustand';
 import { TaskFolderType, TaskType, ErrorResponse, UpdateTaskInputType } from 'types/ms-todo';
 
-import { getTaskFolders, getMe, deleteTaskFolder, updateTaskFolder, createTaskFolder, getTasksFromFolder, updateTask } from '../pages/Popup/helpers/msTodoRestApi';
+import { getTaskFolders, getMe, deleteTaskFolder, updateTaskFolder, createTaskFolder, getTasksFromFolder, updateTask, createTaskInFolder } from '../pages/Popup/helpers/msTodoRestApi';
 
 import useGlobalStore from '../global-stores';
 
@@ -30,6 +30,7 @@ export type TaskStoreType = {
   createTaskFolder: (folderName: string) => Promise<TaskFolderType & ErrorResponse>;
   getTasksFromFolder: (folderId: string) => TaskType[];
   updateTaskById: (taskId: string, updateTaskInputType: UpdateTaskInputType) => Promise<TaskType & ErrorResponse>;
+  createTaskInFolder: (taskName: string, folderId: string) => Promise<TaskType & ErrorResponse>;
 };
 
 export const routeStore = (
@@ -231,6 +232,25 @@ export const routeStore = (
         ...taskFolderDict
       }
     });
+  },
+  createTaskInFolder: async (taskName: string, folderId: string) => {
+    if (!taskName) return;
+    const globalStore = useGlobalStore.getState();
+    const userAuthToken = await globalStore.ensureAuthenticatedAsync();
+    const result = await createTaskInFolder(userAuthToken, taskName, folderId);
+    if (result && result.error) {
+      return result;
+    }
+    console.log("The result of calling the create Task API", result);
+
+    // const taskFolderDict = globalStore.taskFolderDict;
+
+    // taskFolderDict[result.id] = result as TaskType;
+    // set({
+    //   taskFolderDict: {
+    //     ...taskFolderDict
+    //   }
+    // });
   }
 });
 
