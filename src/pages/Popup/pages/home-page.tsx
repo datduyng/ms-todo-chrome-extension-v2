@@ -26,6 +26,8 @@ const HomePage = () => {
     getTasksFromFolder,
     selectedTaskId,
     selectedFolderId,
+    cloudRefresh,
+    cloudRefreshStatus
   ] = useGlobalStore((state) => [
     state.userAuthToken,
     state.logOut,
@@ -33,6 +35,8 @@ const HomePage = () => {
     state.getTasksFromFolder,
     state.selectedTaskId,
     state.selectedFolderId,
+    state.cloudRefresh,
+    state.cloudRefreshStatus
   ]);
 
   useEffect(() => {
@@ -90,6 +94,8 @@ const HomePage = () => {
             justifyContent: 'center',
             alignItems: 'center',
           }}
+          isDisabled={cloudRefreshStatus}
+          onClick={cloudRefresh}
           iconBefore={<WiCloudRefresh fontSize={35} color={'gray'} />}
         ></Button>
       </div>
