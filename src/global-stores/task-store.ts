@@ -4,7 +4,7 @@ import { TaskFolderType, TaskType, ErrorResponse, UpdateTaskInputType } from 'ty
 import { getTaskFolders, getMe, deleteTaskFolder, updateTaskFolder, createTaskFolder, getTasksFromFolder, updateTask, createTaskInFolder } from '../pages/Popup/helpers/msTodoRestApi';
 
 import useGlobalStore from '../global-stores';
-import { WiCloudRefresh } from 'react-icons/wi';
+import useAnalytic, { AnalyticTypes } from './use-analytics';
 
 const GROUP_FILTERS = {
   TODAY_TASK: 'Today',
@@ -110,6 +110,7 @@ export const routeStore = (
     set({
       selectedTaskId
     })
+    useAnalytic.getInstance().logEvent(AnalyticTypes.SELECT_TASK);
   },
   fetchTaskFolders: async () => {
     const globalStore = useGlobalStore.getState();
@@ -117,9 +118,6 @@ export const routeStore = (
     const userAuthToken = await globalStore.ensureAuthenticatedAsync();
     console.log('userAuthToken', userAuthToken);
     const taskFolders = await getTaskFolders(userAuthToken);
-    const me = await getMe(userAuthToken);
-    console.log('me', me);
-    console.log('taskFolders()', taskFolders);
     const taskFolderDict = globalStore.taskFolderDict;
     for (let taskFolder of taskFolders.value) {
       taskFolderDict[taskFolder.id] = taskFolder;
@@ -154,6 +152,7 @@ export const routeStore = (
       return result;
     }
     taskFolderDict[folderId] = result;
+    useAnalytic.getInstance().logEvent(AnalyticTypes.RENAME_FOLDER);
     set({
       taskFolderDict: {
         ...taskFolderDict
@@ -169,12 +168,12 @@ export const routeStore = (
     }
     const taskFolderDict = globalStore.taskFolderDict;
     delete taskFolderDict[folderId];
-    console.log('taskFolderDict delete', taskFolderDict);
     if (folderId === globalStore.selectedFolderId) {
       set({
         selectedFolderId: globalStore.defaultSelectedFolderId
       })
     }
+    useAnalytic.getInstance().logEvent(AnalyticTypes.DELETE_FOLDER);
     set({
       selectedTaskId: null,
       taskFolderDict: {
@@ -231,6 +230,8 @@ export const routeStore = (
     const taskFolderDict = globalStore.taskFolderDict;
 
     taskFolderDict[result.id] = result as TaskFolderType;
+    useAnalytic.getInstance().logEvent(AnalyticTypes.CREATE_TASK_FOLDER);
+
     set({
       taskFolderDict: {
         ...taskFolderDict
@@ -249,6 +250,7 @@ export const routeStore = (
     const taskDict = globalStore.taskDict;
 
     taskDict[result.id] = result as TaskType;
+    useAnalytic.getInstance().logEvent(AnalyticTypes.ADD_TASK);
     set({
       taskDict: {
         ...taskDict,
@@ -263,7 +265,7 @@ export const routeStore = (
     });
     await globalStore.fetchTaskFolders();  
     await globalStore.getTasksFromFolder(String(globalStore.selectedFolderId));
-    console.log("CLOUD REFRESH");
+    useAnalytic.getInstance().logEvent(AnalyticTypes.CLOUD_SYNC);
     set({
       cloudRefreshStatus: false
     });

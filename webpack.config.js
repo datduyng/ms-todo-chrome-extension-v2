@@ -139,6 +139,7 @@ var options = {
               JSON.stringify({
                 description: process.env.npm_package_description,
                 version: process.env.npm_package_version,
+                __DEV__: process.env.NODE_ENV === 'development' ?  true : false,
                 ...JSON.parse(content.toString()),
               })
             );

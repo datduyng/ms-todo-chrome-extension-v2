@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import useGlobalStore from '../../global-stores';
+import useAnalytics, { AnalyticTypes }  from '../../global-stores/use-analytics';
 
 import { AllRoutesType } from '../../global-stores/route-store';
 
@@ -22,6 +23,7 @@ const App = () => {
   ]);
 
   useEffect(() => {
+    useAnalytics.getInstance().logEvent(AnalyticTypes.APP_OPEN);
     // offline --> online ??
     // window.addEventListener('online', () => {
     //   setOnline(true);

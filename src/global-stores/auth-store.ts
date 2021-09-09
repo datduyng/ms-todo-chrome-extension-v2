@@ -1,6 +1,9 @@
 import { timeStamp } from 'console';
+import { getMe } from '../pages/Popup/helpers/msTodoRestApi';
 import { create as createPKCE } from 'pkce';
 import { SetState, GetState } from 'zustand';
+
+import useAnalytic, { AnalyticTypes } from './use-analytics';
 
 const MS_AUTH_KEY = 'ms-auth-storage';
 let localStorage =
@@ -89,9 +92,33 @@ export function firstTimeOauth2AndSaveToStore() {
             } as any).toString(),
           })
             .then((data) => data.json())
-            .then((data: MSOauth2BearerType) => {
+            .then(async (data: MSOauth2BearerType) => {
               console.log('data resolves', data);
               setUserBeaer(data);
+
+              try {
+                const me = await getMe(data.access_token) as {
+                  id: string;
+                  displayName: string;
+                  givenName: string;
+                  surname: string;
+                  userPrincipalName: string;
+                };
+                localStorage['USER_INFO'] = JSON.stringify(me);
+                useAnalytic.getInstance().setUserId(me.id);
+                useAnalytic.getInstance().identify(new useAnalytic.Identify()
+                  .set('last seen date', String(new Date()))
+                  .set('display name', me.displayName)
+                  .set('first name', me.givenName)
+                  .set('last name', me.surname)
+                  .set('email', me.userPrincipalName));
+                useAnalytic.getInstance().logEvent(AnalyticTypes.LOG_IN);
+              } catch (e) {
+                console.error("Error when fetching user info", e);
+                useAnalytic.getInstance().logEvent(AnalyticTypes.FAIL_ON_GET_ME);
+              }
+              // register analytics here 
+
               resolve();
             })
             .catch((e) => reject(e));
@@ -99,6 +126,7 @@ export function firstTimeOauth2AndSaveToStore() {
       );
     }
   ).catch(async (e) => {
+    useAnalytic.getInstance().logEvent(AnalyticTypes.FAIL_ON_LOG_IN);
     console.error('some error', e); // todo
     // await clearStorage();
   });
@@ -217,6 +245,7 @@ const authStore = (
   },
   logOut: () => {
     setUserBeaer(null);
+    useAnalytic.getInstance().logEvent(AnalyticTypes.LOG_OUT)
     set({
       authenticated: false,
       userAuthToken: '',

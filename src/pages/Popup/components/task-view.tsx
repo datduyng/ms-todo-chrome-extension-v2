@@ -6,6 +6,9 @@ import StarIcon from '@atlaskit/icon/glyph/star';
 import ArrowLeftIcon from '@atlaskit/icon/glyph/arrow-left';
 import CalendarIcon from '@atlaskit/icon/glyph/calendar';
 
+import useAnalytics, { AnalyticTypes } from '../../../global-stores/use-analytics';
+
+
 import ContentEditable from 'react-contenteditable';
 
 import Button from '@atlaskit/button';
@@ -106,6 +109,9 @@ const TaskView = () => {
             isChecked={taskForm.status === 'completed'}
             onChange={(e) => {
               SetIsDirtyTaskSync(true);
+              if (!e.currentTarget.checked) {
+                useAnalytics.getInstance().logEvent(AnalyticTypes.MARK_TASK_DONE);
+              }
               updateTaskForm({
                 ...taskForm,
                 status: e.currentTarget.checked ? 'completed' : 'notStarted',
