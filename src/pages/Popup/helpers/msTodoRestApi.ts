@@ -14,7 +14,6 @@ const request = (
   bearer: string,
   { queries = {}, body = {}, headers = {}, ...theRest } = {}
 ): Promise<any> => {
-  console.log('headers', headers);
   const data = {
     method: method,
     headers: {

@@ -81,7 +81,6 @@ const TaskView = () => {
     }, 500)
   ).current;
 
-  console.log('display', getDisplayDate(taskForm.dueDateTime?.dateTime));
   return (
     <div>
       <div
@@ -219,7 +218,13 @@ const TaskView = () => {
 
         <ContentEditable
           id="myContentEditable"
+          placeholder="Description"
           html={isBodyEmpty ? 'Description' : taskForm.body.content || ''}
+          onFocus={() => {
+            if (isBodyEmpty) {
+              setIsBodyEmpty(false);
+            }
+          }}
           onChange={(e) => {
             SetIsDirtyTaskSync(true);
             updateTaskForm({
